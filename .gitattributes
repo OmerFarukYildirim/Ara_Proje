@@ -1,0 +1,24 @@
+# Tüm metin dosyalarını otomatik olarak algıla ve
+# depoya gönderirken (commit) LF'ye, Windows'a çekerken (checkout) CRLF'ye dönüştür.
+* text=auto
+
+# Bu dosya tiplerini her zaman LF (Unix) formatında tutmaya zorla.
+# Bu, platformlar arası tutarlılık için en iyisidir.
+*.java     text eol=lf
+*.py       text eol=lf
+*.js       text eol=lf
+*.ts       text eol=lf
+*.css      text eol=lf
+*.html     text eol=lf
+*.xml      text eol=lf
+*.properties text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.md       text eol=lf
+*.json     text eol=lf
+*.sql      text eol=lf
+
+# Bu dosyaların ikili (binary) olduğunu ve dönüştürülmemesi gerektiğini belirt.
+*.jar      binary
+*.png      binary
+*.jpg      binary

@@ -1,12 +1,10 @@
-package com.FetcherMicroService.controller;
+package com.FetcherMicroService.controller; // Senin paket adın farklı olabilir
 
-import com.FetcherMicroService.dtos.NewsResponseDTO;
 import com.FetcherMicroService.services.NewsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/news")
@@ -18,10 +16,10 @@ public class NewsController {
         this.newsService = newsService;
     }
 
+    // Dönüş tipini Mono<Map> olarak güncelledik
     @GetMapping
-    public Mono<NewsResponseDTO> getNews(@RequestParam String category) {
-        // Servisten Mono<NewsResponseDTO> nesnesini direkt olarak geri döndürüyoruz.
-        // Spring WebFlux gerisini halleder. Asla .block() kullanma!
-        return newsService.getNewsByCategory(category);
+    public Mono<Map> getNews(@RequestParam String category) {
+        // fetchAndEnrichNews metodunu çağırıyoruz
+        return newsService.fetchAndEnrichNews(category);
     }
 }

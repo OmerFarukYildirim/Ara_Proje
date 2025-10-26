@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+httpx
+elasticsearch==7.17.9
+pydantic-settings
