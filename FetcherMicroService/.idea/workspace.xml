@@ -9,7 +9,11 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ai-enrichment/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../content-finder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +93,7 @@
       <workItem from="1761258282429" duration="2934000" />
       <workItem from="1761417567494" duration="2368000" />
       <workItem from="1761475044363" duration="4357000" />
-      <workItem from="1761854975711" duration="4228000" />
+      <workItem from="1761854975711" duration="5043000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>
