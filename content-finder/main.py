@@ -1,108 +1,153 @@
-
-
-import httpx
-import asyncio
-from fastapi import FastAPI
-from typing import List, Optional
-from bs4 import BeautifulSoup
-
-from models import ArticleInput
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from elasticsearch import Elasticsearch
+import models # models.py dosyamız
 from config import settings
+from typing import List, Dict, Any, Optional # <-- 'Optional' eklendi
+import httpx # <-- YENİ IMPORT
 
 app = FastAPI()
 
-# AI Servisine istek atmak için global bir Asenkron Client oluşturalım
-# Bu, "connection pool" kullanarak performansı artırır
-ai_client = httpx.AsyncClient(
-    base_url=settings.ai_enrichment_url, # http://127.0.0.1:8000
-    timeout=300.0 # AI işlemleri uzun sürebilir, timeout'u yüksek tutalım
-)
+# --- YENİ AYARLAR ---
+# Yetersiz haber sınırı (bu sayının altındaysa fetcher'ı tetikle)
+MIN_UNREAD_THRESHOLD = 3
 
-# --- Kazıma (Scraping) Fonksiyonu (Değişiklik yok) ---
-async def scrape_full_content(url: str) -> Optional[str]:
-    if not url: return None
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+# --- Bağlantılar ---
+def get_db():
+    """PostgreSQL oturum (session) bağımlılığı"""
+    db = models.SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Elasticsearch bağlantısı
+try:
+    es = Elasticsearch(settings.elasticsearch_url)
+    es.ping()
+    print("[content-finder] Elasticsearch'e başarıyla bağlandı.")
+except Exception as e:
+    print(f"[content-finder] Elasticsearch bağlantı hatası: {e}")
+    es = None
+
+# YENİ: Fetcher-service'i (Java) çağırmak için Asenkron HTTP Client
+# Bu client'ı global olarak tanımlıyoruz ki bağlantıları yeniden kullanabilsin
+try:
+    fetcher_client = httpx.AsyncClient(
+        base_url=settings.fetcher_service_url,
+        timeout=120.0 # Java + AI + ES kaydı yavaş olabilir, timeout yüksek
+    )
+    print(f"[content-finder] Fetcher-service client'ı {settings.fetcher_service_url} için kuruldu.")
+except Exception as e:
+    print(f"Fetcher client hatası: {e}")
+    fetcher_client = None
+
+# --- Pydantic Modelleri (Değişiklik yok) ---
+class ReadHistoryInput(BaseModel):
+    user_id: str
+    news_id: str
+
+# --- API ENDPOINT 1 (Değişiklik yok) ---
+@app.post("/api/track-read")
+def track_read_history(item: ReadHistoryInput, db: Session = Depends(get_db)):
+    """
+    Frontend'den gelen "bu haberi okudu" bilgisini PostgreSQL'e kaydeder.
+    (Bu endpoint senkron kalabilir, network I/O yapmıyor)
+    """
+    # ... (bu fonksiyonun kodu aynı, değişiklik yok) ...
+    new_record = models.UserReadHistory(
+        user_id=item.user_id,
+        news_id=item.news_id
+    )
+    try:
+        db.add(new_record)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        return {"status": "already_exists"}
+    return {"status": "success", "user_id": item.user_id, "news_id": item.news_id}
+
+
+# --- API ENDPOINT 2 (TAMAMEN GÜNCELLENDİ) ---
+@app.get("/api/feed/{user_id}")
+async def get_user_feed(
+        user_id: str,
+        category: str,  # <-- YENİ: Query param olarak (?category=technology)
+        db: Session = Depends(get_db)
+) -> List[Dict[str, Any]]:
+    """
+    Kullanıcıya okunmamış haberleri getirir. Kategoriye göre filtreler.
+    Yeterli haber yoksa, fetcher-service'i tetikler ve tekrar dener.
+    """
+
+    if not es or not fetcher_client:
+        raise HTTPException(503, "Harici servisler (ES veya Fetcher) düzgün başlatılamadı.")
+
+    # --- 1. İç Fonksiyon: Okunmamış Haberleri Getir ---
+    # Bu fonksiyon hem başta hem de fetch sonrası çağrılacak
+    def get_unread_news_from_db():
+        # Postgres call (Sync - Blocking)
+        # Not: FastAPI, sync fonksiyonları async endpoint içinde
+        # otomatik olarak bir thread pool'da çalıştırır.
+        read_news_records = db.query(models.UserReadHistory.news_id).filter(
+            models.UserReadHistory.user_id == user_id
+        ).all()
+        read_news_ids = [record[0] for record in read_news_records]
+
+        # ES Sorgusu: 'must_not' (okunanlar) VE 'filter' (kategori)
+        search_body = {
+            "size": 20,
+            "query": {
+                "bool": {
+                    "must_not": [{"ids": {"values": read_news_ids}}],
+                    "filter": [
+                        # KATEGORİ FİLTRESİNİ EKLEDİK
+                        {"term": {"category.keyword": category}}
+                    ]
+                }
+            },
+            "sort": [{"id.keyword": "desc"}] # .keyword'ü unutmuyoruz
+        }
+
         try:
-            response = await client.get(url, headers=headers)
-            if response.status_code != 200:
-                print(f"[CF] Scrape Hatası (URL: {url}): Status {response.status_code}")
-                return None
-            soup = BeautifulSoup(response.text, 'lxml')
-            paragraphs = soup.find_all('p')
-            if not paragraphs: return None
-            full_text = "\n".join([p.get_text() for p in paragraphs])
-            print(f"[CF] Scrape Başarılı (URL: {url}): {len(full_text)} karakter.")
-            return full_text
+            # ES call (Sync - Blocking)
+            response = es.search(index="news_articles", body=search_body)
+            hits = response.get("hits", {}).get("hits", [])
+            return [hit["_source"] for hit in hits]
         except Exception as e:
-            print(f"[CF] Scrape Kritik Hata (URL: {url}): {e}")
-            return None
+            raise HTTPException(status_code=500, detail=f"Elasticsearch'ten veri çekilemedi: {e}")
 
-# --- YENİ YARDIMCI FONKSİYON: Tek makaleyi kazı ve content'i güncelle ---
-async def process_article_content(article: ArticleInput) -> ArticleInput:
-    """
-    Bir makaleyi alır, URL'sini kazır (scrape)
-    ve 'content' alanını güncellenmiş olarak döndürür.
-    """
-    full_text = await scrape_full_content(article.url)
+    # --- 2. Ana Akış ---
 
-    if full_text:
-        # Kazıma başarılıysa, content'i tam metinle değiştir
-        article.content = full_text
-    else:
-        # Kazıma başarısızsa, NewsAPI'nin verdiği kısa content ile devam et
-        # (Bu zaten article.content içinde mevcut)
-        print(f"[CF] Kazıma başarısız (URL: {article.url}). Kısa content kullanılıyor.")
+    # 1. Deneme: Mevcut haberleri kontrol et
+    unread_news = get_unread_news_from_db()
 
-    return article # Content'i güncellenmiş makaleyi döndür
+    # Yeterli haber varsa, hemen döndür
+    if len(unread_news) >= MIN_UNREAD_THRESHOLD:
+        print(f"[content-finder] Yeterli haber ({len(unread_news)}) bulundu. Cache'den sunuluyor.")
+        return unread_news
 
-
-# --- YENİ ANA ENDPOINT: Fetcher'dan gelen listeyi işleyen ana beyin ---
-@app.post("/scrape-and-forward", response_model=dict)
-async def handle_scrape_and_forward(articles: List[ArticleInput]):
-    """
-    Fetcher'dan gelen makale listesini alır.
-    1. Tüm makalelerin URL'lerini paralel olarak kazır (scrape).
-    2. 'content' alanlarını günceller.
-    3. Güncellenmiş listeyi AI-Enrichment servisine (:8000) yollar.
-    4. AI servisinden gelen cevabı Fetcher'a geri döndürür.
-    """
-    print(f"[CF] {len(articles)} adet makale Fetcher'dan alındı. Kazıma başlıyor...")
-
-    # --- 1. & 2. TÜM KAZIMA (SCRAPING) İŞLEMLERİNİ PARALEL BAŞLAT ---
-    # 20 haber varsa, 20'si de aynı anda kazınmaya başlar.
-    scraping_tasks = [process_article_content(article) for article in articles]
-
+    # 2. Deneme: Yeterli haber yok. Fetcher'ı (Java) tetikle.
+    print(f"[content-finder] Yetersiz haber ({len(unread_news)}). Kategori '{category}' için Fetcher-service tetikleniyor...")
     try:
-        # Güncellenmiş (tam content'li) makale listesini al
-        updated_articles = await asyncio.gather(*scraping_tasks)
-    except Exception as e:
-        print(f"[CF] asyncio.gather (scraping) hatası: {e}")
-        raise HTTPException(status_code=500, detail="Makale kazıma sırasında hata oluştu.")
-
-    print(f"[CF] {len(updated_articles)} makale kazındı. AI servisine yönlendiriliyor...")
-
-    # --- 3. GÜNCELLENMİŞ LİSTEYİ AI SERVİSİNE YOLLA ---
-    try:
-        # AI servisinin (:8000) /enrich-and-save endpoint'ine POST et
-        response = await ai_client.post(
-            "/enrich-and-save",
-            json=[article.model_dump() for article in updated_articles] # Pydantic'i JSON'a çevir
+        # --- ASENKRON ÇAĞRI ---
+        # Fetcher'ın /api/news endpoint'ine GET isteği at
+        fetcher_response = await fetcher_client.get(
+            "/api/news",
+            params={"category": category} # ?category=...
         )
-        response.raise_for_status() # 4xx veya 5xx hata varsa exception fırlat
+        fetcher_response.raise_for_status() # 4xx/5xx hata varsa
+        print(f"[content-finder] Fetcher-service yanıtı: {fetcher_response.json()}")
 
-        # AI servisinden gelen cevabı al (örn: {"saved_count": 20, ...})
-        ai_response_data = response.json()
-        print(f"[CF] AI servisi başarıyla yanıtladı: {ai_response_data}")
+    except (httpx.HTTPStatusError, httpx.RequestError) as e:
+        print(f"[content-finder] Fetcher-service'e ulaşılamadı veya hata verdi: {e}")
+        # Fetcher başarısız olursa, en azından elimizdeki az sayıdaki haberi döndür
+        return unread_news
 
-        # --- 4. CEVABI FETCHER'A DÖNDÜR ---
-        return ai_response_data
+    # 3. Deneme: Fetcher çalıştı. ES'i (ve Postgres'i) tekrar sorgula.
+    print("[content-finder] Fetcher tamamlandı. Veritabanı tekrar sorgulanıyor.")
 
-    except httpx.HTTPStatusError as e:
-        print(f"[CF] AI Servisine istekte HATA (HTTP): {e.response.status_code} - {e.response.text}")
-        raise HTTPException(status_code=502, detail=f"AI servisi hata döndü: {e.response.text}")
-    except Exception as e:
-        print(f"[CF] AI Servisine istekte HATA (Genel): {e}")
-        raise HTTPException(status_code=502, detail=f"AI servisine bağlanılamadı: {e}")
+    final_unread_news = get_unread_news_from_db()
+    return final_unread_news

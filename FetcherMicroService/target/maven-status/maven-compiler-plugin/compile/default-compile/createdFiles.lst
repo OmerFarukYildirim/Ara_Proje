@@ -1,0 +1,6 @@
+com\FetcherMicroService\apiconfig\WebClientConfig.class
+com\FetcherMicroService\services\NewsService.class
+com\FetcherMicroService\FetcherMicroServiceApplication.class
+com\FetcherMicroService\dtos\NewsResponseDTO.class
+com\FetcherMicroService\controller\NewsController.class
+com\FetcherMicroService\dtos\ArticleDTO.class

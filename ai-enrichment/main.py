@@ -1,5 +1,3 @@
-from http.client import HTTPException
-
 import httpx
 import asyncio
 import hashlib # Benzersiz ID oluşturmak için
