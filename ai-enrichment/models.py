@@ -10,6 +10,7 @@ class ArticleInput(BaseModel):
     url: str # Haberin benzersiz ID'si olarak bunu kullanacağız
     image_url: Optional[str] = None
     category: Optional[str] = None
+    summary: Optional[str] = None # bunu processor için ekledim
 
 # --- 2. Zenginleştirme Sonucu Oluşacak Alt Modeller ---
 # Varlık Tanıma (NER) için bir iç model
@@ -28,6 +29,7 @@ class ArticleEnriched(BaseModel):
     url: str
     image_url: Optional[str] = None
     category: Optional[str] = None
+    summary: Optional[str] = None # bunu processor için ekledim
 
     # AI ile eklenecek yeni alanlar
     sentiment_label: Optional[str] = None  # örn: "POSITIVE", "NEGATIVE"

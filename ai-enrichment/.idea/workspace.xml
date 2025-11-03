@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1691d67d-497d-4ecd-8fcf-24124eced44d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/ArticleDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/ArticleDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +43,7 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Ara_Proje_Backend/content-finder",
+    "last_opened_file_path": "D:/Ara_Proje_Backend/ai-enrichment",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -92,6 +89,7 @@
       <workItem from="1761417613195" duration="3352000" />
       <workItem from="1761475651771" duration="5653000" />
       <workItem from="1761860376889" duration="2506000" />
+      <workItem from="1761993051859" duration="2218000" />
     </task>
     <servers />
   </component>

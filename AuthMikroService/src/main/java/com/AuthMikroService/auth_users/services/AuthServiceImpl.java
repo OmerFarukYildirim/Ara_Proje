@@ -100,6 +100,7 @@ public class AuthServiceImpl implements AuthService {
                 .phoneNumber(verification.getPhoneNumber())
                 .isActive(true)
                 .createdAt(LocalDateTime.now())
+                .isFirstLogin(true)
                 .build();
         userRepository.save(newUser);
 
@@ -119,7 +120,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    // --- DÜZELTİLMİŞ LOGIN METODU ---
     @Override
     public Response<?> login(LoginRequest loginRequest) {
         log.info("INSIDE login() - Step 1");
@@ -160,7 +160,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    // --- VERIFY LOGIN METODU (Çok az değişiklik var) ---
     @Override
     public Response<LoginResponse> verifyCodeAndLogin(VerificationRequest verificationRequest) {
         log.info("INSIDE verifyCodeAndLogin() - Step 2");

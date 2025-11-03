@@ -14,16 +14,16 @@ import java.util.Map; // Python'dan gelen JSON'u karşılamak için Map kullanab
 @Service
 public class NewsService {
 
-    // NewsAPI ile ilgili her şeyi sildik
-    private final WebClient aiEnrichmentWebClient;
+    // private final WebClient aiEnrichmentWebClient; // ESKİ
+    private final WebClient processorWebClient; // YENİ
 
     public NewsService(WebClient.Builder webClientBuilder,
                        // YENİ: ai.enrichment.url'yi application.properties'ten oku
-                       @Value("${ai.enrichment.url}") String aiEnrichmentUrl) {
+                       @Value("${processor.service.url}") String processorServiceUrl) {
 
         // Artık sadece :8000'deki AI servisine bağlanıyoruz
-        this.aiEnrichmentWebClient = webClientBuilder
-                .baseUrl(aiEnrichmentUrl) // http://127.0.0.1:8000
+        this.processorWebClient = webClientBuilder
+                .baseUrl(processorServiceUrl) // http://127.0.0.1:8003
                 .build();
     }
 
@@ -92,8 +92,8 @@ public class NewsService {
                             "Doğrudan AI-Enrichment servisine yollanıyor...");
 
                     // AI-Enrichment servisinin (:8000) /enrich-and-save endpoint'ine POST at
-                    return this.aiEnrichmentWebClient.post()
-                            .uri("/enrich-and-save") // ai-enrichment'taki endpoint
+                    return this.processorWebClient.post() // YENİ
+                            .uri("/summarize-and-forward") // YENİ
                             .bodyValue(articles)
                             .retrieve()
                             .bodyToMono(Map.class); // AI servisinden gelen onayı ({"saved_count": ...}) al

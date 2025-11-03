@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
                 .message("All users retreived successfully")
                 .data(userDTOS)
                 .build();
-    }
+    }*/
 
     @Override
     public Response<UserDTO> getOwnAccountDetails() {
@@ -68,8 +68,6 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentLoggedInUser();
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        if(user.getPersonalTrainer() != null)
-        userDTO.setPtId(user.getPersonalTrainer().getId());
 
         return Response.<UserDTO>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -78,7 +76,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
     }
-
+/*
     @Override
     public Response<?> updateOwnAccount(UserDTO userDTO) {
 
@@ -186,6 +184,22 @@ public class UserServiceImpl implements UserService {
         return Response.<UserDTO>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("success")
+                .data(userDTO)
+                .build();
+    }
+
+    @Override
+    public Response<UserDTO> updateIsFirstLogin(){
+
+        User user = getCurrentLoggedInUser();
+
+        user.setFirstLogin(false);
+
+        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+
+        return Response.<UserDTO>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("first login making false successfully")
                 .data(userDTO)
                 .build();
     }

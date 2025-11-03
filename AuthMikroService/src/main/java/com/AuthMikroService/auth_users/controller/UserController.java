@@ -17,7 +17,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     /*@GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')") // ADMIN ALONE HAVE ACCESS TO THIS endpoint
     public ResponseEntity<Response<List<UserDTO>>> getAllUsers(){
@@ -32,13 +31,13 @@ public class UserController {
         userDTO.setImageFile(imageFile);
         return ResponseEntity.ok(userService.updateOwnAccount(userDTO));
     }
-
+*/
     @GetMapping("/account")
     public ResponseEntity<Response<UserDTO>> getOwnAccountDetails() {
         return ResponseEntity.ok(userService.getOwnAccountDetails());
     }
 
-
+/*
     @DeleteMapping("/deactivate")
     public ResponseEntity<Response<?>> deactivateOwnAccount() {
         return ResponseEntity.ok(userService.deactivateOwnAccount());
@@ -47,6 +46,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<Response<UserDTO>> getUserProfileById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserProfileById(id));
+    }
+
+    @PutMapping("/updateFirstLogin")
+    public ResponseEntity<Response<?>> updateOwnAccount(){
+        return ResponseEntity.ok(userService.updateIsFirstLogin());
     }
 
 }

@@ -33,4 +33,7 @@ public class UserDTO {
 
     private MultipartFile imageFile;
 
+    private boolean isFirstLogin;
+
+
 }
