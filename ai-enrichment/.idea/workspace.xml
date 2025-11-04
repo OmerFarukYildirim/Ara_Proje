@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1691d67d-497d-4ecd-8fcf-24124eced44d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +86,7 @@
       <workItem from="1761475651771" duration="5653000" />
       <workItem from="1761860376889" duration="2506000" />
       <workItem from="1761993051859" duration="2218000" />
-      <workItem from="1762242529284" duration="125000" />
+      <workItem from="1762242529284" duration="274000" />
     </task>
     <servers />
   </component>
