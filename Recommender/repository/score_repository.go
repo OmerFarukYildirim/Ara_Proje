@@ -1,136 +1,217 @@
-package repository
+/*package repository
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"recommender/database" // Bizim DB bağlantımız
-	"recommender/entity"   // Bizim UserScore modelimiz
-	"strings"
+	"recommender/entity"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 )
 
-// ScoreRepository, veritabanı işlemleri için metotları tanımlar.
+// ScoreRepository artık iki veritabanı istemcisini de tutar
 type ScoreRepository struct {
-	// (Gelecekte buraya *pgxpool.Pool gibi bir DB bağlantısı eklenebilir
-	//  ancak şimdilik database.DB global değişkenini kullanacağız)
+	db  *pgxpool.Pool // PostgreSQL (Loglama için)
+	rdb *redis.Client // Redis (Hız için)
 }
 
-// NewScoreRepository, yeni bir repository oluşturur (Şimdilik boş).
-func NewScoreRepository() *ScoreRepository {
-	return &ScoreRepository{}
+// NewScoreRepository, her iki istemciyi de enjekte eder
+func NewScoreRepository(db *pgxpool.Pool, rdb *redis.Client) *ScoreRepository {
+	return &ScoreRepository{db: db, rdb: rdb}
 }
 
-// GetUserScores, bir kullanıcının TÜM skorlarını çeker.
-// Eğer kullanıcı yoksa, 'nil' ve 'nil' (hata yok) döner.
-func (r *ScoreRepository) GetUserScores(ctx context.Context, userID int64) (*entity.UserScore, error) {
-	// (Go'da 16 sütunu da tek tek yazmak yerine '*' kullanmak
-	//  bu senaryoda daha pratiktir, ancak normalde tavsiye edilmez)
-	query := "SELECT * FROM user_scores WHERE user_id = $1"
+// redisKey, user_id için standart bir key oluşturur (örn: "user_score:12345")
+func (r *ScoreRepository) redisKey(userID int64) string {
+	return fmt.Sprintf("user_score:%d", userID)
+}
 
-	row := database.DB.QueryRow(ctx, query, userID)
+// GetUserScoresFromCache, bir kullanıcının skorlarını Redis'ten (HIZLI) çeker.
+func (r *ScoreRepository) GetUserScoresFromCache(ctx context.Context, userID int64) (*entity.UserScore, error) {
+	key := r.redisKey(userID)
 
 	var score entity.UserScore
 
-	// Scan, tüm sütunları entity/score.go'daki sıraya göre tarar.
-	// Bu yüzden struct'taki sıralama önemlidir!
-	err := row.Scan(
-		&score.UserID,
-		&score.TechnologyScore,
-		&score.SportsScore,
-		&score.ArtScore,
-		&score.MusicScore,
-		&score.ScienceScore,
-		&score.TravelScore,
-		&score.FoodScore,
-		&score.MovieScore,
-		&score.BookScore,
-		&score.FashionScore,
-		&score.GameScore,
-		&score.NatureScore,
-		&score.PhotographyScore,
-		&score.EducationScore,
-		&score.HealthScore,
-		&score.EconomyScore,
-	)
+	// HGetAll komutunu çalıştır ve sonucu doğrudan struct'a 'Scan' et
+	if err := r.rdb.HGetAll(ctx, key).Scan(&score); err != nil {
+		return nil, err
+	}
 
-	if err != nil {
-		// 'pgx.ErrNoRows' Go'da 'pgx' import etmeden
-		// doğrudan 'err.Error() == "no rows in result set"' ile de kontrol edilebilir
-		// ama en temizi 'Is' ile kontrol etmektir. Şimdilik basit tutalım.
-		if err.Error() == "no rows in result set" {
-			return nil, nil // Kullanıcı bulunamadı, bu bir hata değil.
-		}
-		// Gerçek bir veritabanı hatası
-		return nil, fmt.Errorf("GetUserScores sorgu hatası: %w", err)
+	// 'Scan' başarılı ama 'UserID' 0 ise, bu key'in Redis'te olmadığı anlamına gelir
+	if score.UserID == 0 {
+		return nil, redis.Nil // Kullanıcı bulunamadı (nil)
 	}
 
 	return &score, nil
 }
 
-// UpsertUserScores, bir kullanıcının skorlarını günceller veya yoksa oluşturur.
-// Bu, "Başlangıç Seçimi" ve "Skor Güncelleme" için TEK fonksiyondur.
-func (r *ScoreRepository) UpsertUserScores(ctx context.Context, score *entity.UserScore) error {
-	// 16 kategorinin adları (SQL sütun adlarıyla aynı olmalı)
-	categories := []string{
-		"technology_score", "sports_score", "art_score", "music_score",
-		"science_score", "travel_score", "food_score", "movie_score",
-		"book_score", "fashion_score", "game_score", "nature_score",
-		"photography_score", "education_score", "health_score", "economy_score",
+// SetScoresInCache, bir kullanıcının tüm skorlarını Redis'e (HIZLI) yazar.
+// 'UserScore' struct'ını alır ve 'HSet' komutuyla bir Hash'e çevirir.
+func (r *ScoreRepository) SetScoresInCache(ctx context.Context, score *entity.UserScore) error {
+	key := r.redisKey(score.UserID)
+
+	// 'HSet' komutu struct'ı (reflection kullanarak) otomatik olarak
+	// field:value (alan:değer) şeklinde Redis'e yazar.
+	if err := r.rdb.HSet(ctx, key, score).Err(); err != nil {
+		return err
 	}
 
-	// SQL'i dinamik olarak oluştur (INSERT ve ON CONFLICT DO UPDATE)
-
-	// INSERT INTO user_scores(user_id, technology_score, ...)
-	query := `
-		INSERT INTO user_scores (
-			user_id, ` + strings.Join(categories, ", ") + `
-		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
-		)
-		ON CONFLICT (user_id) DO UPDATE SET
-			technology_score = EXCLUDED.technology_score,
-			sports_score = EXCLUDED.sports_score,
-			art_score = EXCLUDED.art_score,
-			music_score = EXCLUDED.music_score,
-			science_score = EXCLUDED.science_score,
-			travel_score = EXCLUDED.travel_score,
-			food_score = EXCLUDED.food_score,
-			movie_score = EXCLUDED.movie_score,
-			book_score = EXCLUDED.book_score,
-			fashion_score = EXCLUDED.fashion_score,
-			game_score = EXCLUDED.game_score,
-			nature_score = EXCLUDED.nature_score,
-			photography_score = EXCLUDED.photography_score,
-			education_score = EXCLUDED.education_score,
-			health_score = EXCLUDED.health_score,
-			economy_score = EXCLUDED.economy_score
-	`
-
-	// Değerleri doğru sırada 'args' listesine ekle
-	args := []interface{}{
-		score.UserID,
-		score.TechnologyScore,
-		score.SportsScore,
-		score.ArtScore,
-		score.MusicScore,
-		score.ScienceScore,
-		score.TravelScore,
-		score.FoodScore,
-		score.MovieScore,
-		score.BookScore,
-		score.FashionScore,
-		score.GameScore,
-		score.NatureScore,
-		score.PhotographyScore,
-		score.EducationScore,
-		score.HealthScore,
-		score.EconomyScore,
-	}
-
-	// SQL'i çalıştır
-	_, err := database.DB.Exec(ctx, query, args...)
-	if err != nil {
-		return fmt.Errorf("UpsertUserScores hatası: %w", err)
-	}
+	// (Opsiyonel) Skora bir "ömür" (TTL) verebilirsin, örn: 30 gün
+	r.rdb.Expire(ctx, key, 30*24*time.Hour)
 
 	return nil
+}
+
+// LogInteractionToDB, ham etkileşimi PostgreSQL'e (GÜVENLİ) yazar.
+func (r *ScoreRepository) LogInteractionToDB(ctx context.Context, userID int64, eventType string, category string, data interface{}) error {
+
+	// Gelen 'data'yı (struct veya map olabilir) JSON'a çevir
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("JSON loglama hatası: %w", err)
+	}
+
+	query := `
+		INSERT INTO interaction_events (user_id, event_type, category_name, event_data)
+		VALUES ($1, $2, $3, $4)
+	`
+
+	_, err = r.db.Exec(ctx, query, userID, eventType, category, jsonData)
+	if err != nil {
+		return fmt.Errorf("PostgreSQL loglama hatası: %w", err)
+	}
+	return nil
+}
+*/
+
+package repository
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"                // Bizim DB bağlantımız
+	"recommender/entity" // Bizim UserScore modelimiz
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
+)
+
+// ScoreRepository, iki veritabanı istemcisini de tutar
+type ScoreRepository struct {
+	db  *pgxpool.Pool // PostgreSQL (Loglama için)
+	rdb *redis.Client // Redis (Hız için)
+}
+
+// NewScoreRepository, her iki istemciyi de enjekte eder
+func NewScoreRepository(db *pgxpool.Pool, rdb *redis.Client) *ScoreRepository {
+	return &ScoreRepository{db: db, rdb: rdb}
+}
+
+// redisKey, user_id için standart bir key oluşturur (örn: "user_score:12345")
+func (r *ScoreRepository) redisKey(userID int64) string {
+	return fmt.Sprintf("user_score:%d", userID)
+}
+
+// GetUserScoresFromCache, bir kullanıcının skorlarını Redis'ten çeker.
+func (r *ScoreRepository) GetUserScoresFromCache(ctx context.Context, userID int64) (*entity.UserScore, error) {
+	key := r.redisKey(userID)
+	var score entity.UserScore
+
+	if err := r.rdb.HGetAll(ctx, key).Scan(&score); err != nil {
+		return nil, err
+	}
+
+	if score.UserID == 0 {
+		return nil, redis.Nil // Redis'te key yoksa 'Scan' hata vermez, 'UserID' 0 olur.
+	}
+	return &score, nil
+}
+
+// SetScoresInCache, bir kullanıcının tüm skorlarını Redis'e yazar.
+func (r *ScoreRepository) SetScoresInCache(ctx context.Context, score *entity.UserScore) error {
+	key := r.redisKey(score.UserID)
+	// 'HSet' komutu struct'ı (reflection kullanarak) otomatik olarak
+	// field:value (alan:değer) şeklinde Redis'e yazar.
+	if err := r.rdb.HSet(ctx, key, score).Err(); err != nil {
+		return err
+	}
+	// Skorlara 30 günlük bir ömür verelim (isteğe bağlı)
+	r.rdb.Expire(ctx, key, 30*24*time.Hour)
+	return nil
+}
+
+// LogInteractionToDB, ham etkileşimi PostgreSQL'e yazar.
+func (r *ScoreRepository) LogInteractionToDB(ctx context.Context, userID int64, eventType string, category string, data interface{}) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("JSON loglama hatası: %w", err)
+	}
+
+	query := `
+		INSERT INTO interaction_events (user_id, event_type, category_name, event_data)
+		VALUES ($1, $2, $3, $4)
+	`
+	_, err = r.db.Exec(ctx, query, userID, eventType, category, jsonData)
+	if err != nil {
+		return fmt.Errorf("PostgreSQL loglama hatası: %w", err)
+	}
+	return nil
+}
+
+// --- YENİ EKLENEN FONKSİYONLAR (KURTARMA İÇİN) ---
+
+// InteractionData, Postgres'ten okunan ham log kaydıdır.
+type InteractionData struct {
+	EventType string // "onboarding" veya "interaction"
+	EventData []byte // Ham JSON
+}
+
+// GetDistinctUserIDs, 'interaction_events' tablosundaki tüm benzersiz
+// kullanıcı ID'lerini çeker.
+func (r *ScoreRepository) GetDistinctUserIDs(ctx context.Context) ([]int64, error) {
+	query := "SELECT DISTINCT user_id FROM interaction_events"
+	rows, err := r.db.Query(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("GetDistinctUserIDs sorgu hatası: %w", err)
+	}
+	defer rows.Close()
+
+	var userIDs []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, fmt.Errorf("ID tarama hatası: %w", err)
+		}
+		userIDs = append(userIDs, id)
+	}
+	return userIDs, nil
+}
+
+// GetInteractionsForUser, bir kullanıcının TÜM ham etkileşimlerini
+// ZAMAN SIRALI (en eskiden en yeniye) olarak çeker.
+func (r *ScoreRepository) GetInteractionsForUser(ctx context.Context, userID int64) ([]InteractionData, error) {
+	query := `
+		SELECT event_type, event_data
+		FROM interaction_events
+		WHERE user_id = $1
+		ORDER BY created_at ASC
+	` // ASC -> En eskiden en yeniye (Skorlamanın doğru yapılması için şart)
+
+	rows, err := r.db.Query(ctx, query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("GetInteractionsForUser sorgu hatası: %w", err)
+	}
+	defer rows.Close()
+
+	var events []InteractionData
+	for rows.Next() {
+		var ev InteractionData
+		if err := rows.Scan(&ev.EventType, &ev.EventData); err != nil {
+			return nil, fmt.Errorf("Etkileşim tarama hatası: %w", err)
+		}
+		events = append(events, ev)
+	}
+	return events, nil
 }

@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"log"
-	"strings"
 
 	"recommender/config" // Kendi config paketimiz
 
@@ -32,49 +31,32 @@ func Init() {
 	migrateDB()
 }
 
-// migrateDB, veritabanı şemasını (tabloları) oluşturur.
-// SQL tipleri (BIGINT, REAL) isteğine göre güncellendi.
+// migrateDB, artık 'interaction_events' tablosunu oluşturur.
+// 'user_scores' tablosunu SİLDİK.
 func migrateDB() {
-	// Kategori listesi (değişiklik yok)
-	categories := []string{
-		"technology_score",
-		"sports_score",
-		"art_score",
-		"music_score",
-		"science_score",
-		"travel_score",
-		"food_score",
-		"movie_score",
-		"book_score",
-		"fashion_score",
-		"game_score",
-		"nature_score",
-		"photography_score",
-		"education_score",
-		"health_score",
-		"economy_score",
-	}
 
-	// SQL sorgusunu dinamik olarak oluştur
-	// (örn: "technology_score REAL DEFAULT 0.0, ...")
-	var scoreColumns []string
-	for _, category := range categories {
-		// int -> REAL, DEFAULT 0 -> 0.0
-		scoreColumns = append(scoreColumns, category+" REAL DEFAULT 0.0")
-	}
+	// Not: Eğer 'user_scores' tablon varsa, DBeaver'dan DROP TABLE ile sil.
 
-	// SQL şemasını hazırla
+	// Ham etkileşimleri loglamak için yeni tablo
+	// (JSONB tipi, gelen tüm JSON'u saklamak için çok güçlüdür)
 	schema := `
-	CREATE TABLE IF NOT EXISTS user_scores (
-		user_id BIGINT PRIMARY KEY, -- VARCHAR(255) -> BIGINT (long)
-		` + strings.Join(scoreColumns, ",\n") + `
-	);`
+	CREATE TABLE IF NOT EXISTS interaction_events (
+		event_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+		user_id BIGINT NOT NULL,
+		category_name VARCHAR(100),
+		event_type VARCHAR(50), -- 'onboarding', 'like', 'dislike', 'share' vs.
+		event_data JSONB, -- Frontend'den gelen JSON'un tamamı
+		created_at TIMESTAMPTZ DEFAULT NOW()
+	);
+	
+	-- Hızlı sorgular için user_id'ye index at
+	CREATE INDEX IF NOT EXISTS idx_interaction_user_id ON interaction_events (user_id);
+	`
 
-	// SQL'i veritabanında çalıştır
 	_, err := DB.Exec(context.Background(), schema)
 	if err != nil {
 		log.Fatalf("Tablo oluşturulamadı (migrateDB): %v\n", err)
 	}
 
-	log.Println("Veritabanı şeması (user_scores) başarıyla doğrulandı/oluşturuldu. (Tipler: BIGINT, REAL)")
+	log.Println("Veritabanı şeması (interaction_events) başarıyla doğrulandı/oluşturuldu.")
 }
