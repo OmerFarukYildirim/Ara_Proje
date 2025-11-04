@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/services/NewsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/services/NewsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -105,7 +88,7 @@
       <workItem from="1760994530035" duration="4687000" />
       <workItem from="1761050097995" duration="1556000" />
       <workItem from="1761064257974" duration="8177000" />
-      <workItem from="1762182567095" duration="4050000" />
+      <workItem from="1762182567095" duration="4659000" />
     </task>
     <servers />
   </component>
