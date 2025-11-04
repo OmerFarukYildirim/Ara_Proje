@@ -1,0 +1,194 @@
+version: '3.8'
+
+# Tüm servislerimizin içinde yaşayacağı özel bir ağ (network) oluşturalım
+networks:
+  ara_proje_network:
+    driver: bridge
+
+services:
+
+  # --- 1. VERİTABANI & ALTYAPI (3 ADET POSTGRES) ---
+
+  postgres_auth:
+    image: postgres:15-alpine
+    container_name: postgres_auth
+    environment:
+      POSTGRES_USER: postgres #
+      POSTGRES_PASSWORD: 12345 #
+      POSTGRES_DB: authmicroservicedb #
+    ports:
+      - "5432:5432" # Auth DB (DBeaver localhost:5432)
+    networks:
+      - ara_proje_network
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+
+  postgres_recommender:
+    image: postgres:15-alpine
+    container_name: postgres_recommender
+    environment:
+      POSTGRES_USER: postgres #
+      POSTGRES_PASSWORD: 12345 #
+      POSTGRES_DB: recommender_db #
+    ports:
+      - "5433:5432" # Recommender DB (DBeaver localhost:5433)
+    networks:
+      - ara_proje_network
+    volumes:
+      - postgres_rec_data:/var/lib/postgresql/data
+
+  # YENİ: Content-Finder için UserReads DB
+  postgres_userreads:
+    image: postgres:15-alpine
+    container_name: postgres_userreads
+    environment:
+      POSTGRES_USER: postgres #
+      POSTGRES_PASSWORD: 12345 #
+      POSTGRES_DB: UserReads #
+    ports:
+      - "5434:5432" # UserReads DB (DBeaver localhost:5434)
+    networks:
+      - ara_proje_network
+    volumes:
+      - postgres_userreads_data:/var/lib/postgresql/data
+
+  redis_cache:
+    image: redis:7-alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379" #
+    networks:
+      - ara_proje_network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200" #
+      - "9300:9300"
+    networks:
+      - ara_proje_network
+
+  # --- 2. MİKROSERVİSLER ---
+
+  auth-service:
+    build: ./AuthMikroService # (AuthMicroService/Dockerfile olmalı)
+    container_name: auth-service
+    ports:
+      - "8090:8090" #
+    environment:
+      SERVER_PORT: 8090
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_auth:5432/authmicroservicedb
+      SPRING_DATASOURCE_USERNAME: postgres #
+      SPRING_DATASOURCE_PASSWORD: 12345 #
+      SECRETEJWTSTRING: "ara123456789proje123456789ara123456789proje123456789" #
+      APP_SECURITY_API_KEY_HEADER: "X-API-KEY" #
+      APP_SECURITY_API_KEY_VALUE: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh" #
+      AWS_S3_REGION: "eu-north-1" #
+      AWS_S3_BUCKET: "opt-app-dev" #
+      AWS_ACCESSKEYID: "AKIA6I7UT46DUIDI7OQ2" #
+      AWS_SECRETKEY: "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" #
+      SPRING_MAIL_HOST: "smtp.gmail.com" #
+      SPRING_MAIL_PORT: 587 #
+      SPRING_MAIL_USERNAME: "omeeryldrmm03@gmail.com" #
+      SPRING_MAIL_PASSWORD: "ivog exhh oime yued" #
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
+    networks:
+      - ara_proje_network
+    depends_on:
+      - postgres_auth
+
+  fetcher-service:
+    build: ./FetcherMicroService # (FetcherMicroService/Dockerfile olmalı)
+    container_name: fetcher-service
+    ports:
+      - "8091:8091" #
+    environment:
+      SERVER_PORT: 8091
+      # application.properties dosyasındaki 'localhost'ları değiştiriyoruz:
+      PROCESSOR_SERVICE_URL: "http://processor-service:80" # C# içeride 80'de çalışır
+      # NewsService.java'da gördüğümüz 'pipeline.start.url'
+      PIPELINE_START_URL: "http://content-finder-service:8001"
+      NEWSAPI_KEY: "43949a6324754952bcc9fb9d59875c1a" #
+      NEWSAPI_BASE_URL: "https://newsapi.org/v2" #
+    networks:
+      - ara_proje_network
+    depends_on:
+      - processor-service
+      - content-finder-service
+
+  processor-service:
+    build: ./Processor # (ProcessorService/Dockerfile olmalı)
+    container_name: processor-service
+    ports:
+      - "8003:80" # Host Port 8003, Container Port 80 (C# varsayılanı)
+    environment:
+      # appsettings.json 'daki 'localhost'ları değiştiriyoruz (__ kullanılır):
+      AiEnrichment__Url: "http://ai-enrichment-service:8000"
+      HuggingFace__ApiKey: "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" #
+    networks:
+      - ara_proje_network
+    depends_on:
+      - ai-enrichment-service
+
+  ai-enrichment-service:
+    build: ./ai-enrichment # (AIEnrichmentService/Dockerfile olmalı)
+    container_name: ai-enrichment-service
+    ports:
+      - "8000:8000" # Host Port 8000, Container Port 8000 (Python varsayılanı)
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      hf_api_key: "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"
+    networks:
+      - ara_proje_network
+    depends_on:
+      - elasticsearch
+
+  # YENİ: Content-Finder Servisi (Port 8001)
+  content-finder-service:
+    build: ./content-finder # (Bu adda bir klasör ve Dockerfile olmalı)
+    container_name: content-finder-service
+    ports:
+      - "8001:8001" # Host Port 8001
+    environment:
+      SERVER_PORT: 8001 # (Eğer Spring ise)
+      # .env dosyasındaki 'localhost'ları değiştiriyoruz:
+      DATABASE_URL: "postgresql://postgres:12345@postgres_userreads:5432/UserReads"
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      FETCHER_SERVICE_URL: "http://fetcher-service:8091"
+    networks:
+      - ara_proje_network
+    depends_on:
+      - postgres_userreads
+      - elasticsearch
+
+  recommender-service:
+    build: ./Recommender # (Recommender/Dockerfile olmalı)
+    container_name: recommender-service
+    ports:
+      - "8004:8004" # Host Port 8004
+    environment:
+      PORT: "8004" # Go servisine içeride 8004'te çalışmasını söyler
+      # .env dosyasındaki 'localhost'ları değiştiriyoruz:
+      DATABASE_URL: "postgresql://postgres:12345@postgres_recommender:5432/recommender_db"
+      REDIS_ADDR: "redis_cache:6379"
+      AUTH_SERVICE_URL: "http://auth-service:8090" # Auth'un 8090 portuna git
+      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh" #
+    networks:
+      - ara_proje_network
+    depends_on:
+      - postgres_recommender
+      - redis_cache
+      - auth-service
+
+# Docker'ın veritabanı verilerini (container silinse bile) kaybetmemesi için disk alanları
+volumes:
+  postgres_auth_data:
+  postgres_rec_data:
+  postgres_userreads_data: # YENİ

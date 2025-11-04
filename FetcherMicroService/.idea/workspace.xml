@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ai-enrichment/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ai-enrichment/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/FetcherMicroService/services/NewsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/FetcherMicroService/services/NewsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +63,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/Ara_Proje_Backend/AuthMikroService",
+    "last_opened_file_path": "D:/Ara_Proje_Backend/FetcherMicroService",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -70,6 +73,14 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Ara_Proje_Backend\FetcherMicroService" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Ara_Proje_Backend\FetcherMicroService" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="FetcherMicroServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="FetcherMicroService" />
@@ -96,6 +107,7 @@
       <workItem from="1761854975711" duration="5043000" />
       <workItem from="1761992973353" duration="3165000" />
       <workItem from="1762182548124" duration="15000" />
+      <workItem from="1762285990620" duration="3783000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>

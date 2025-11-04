@@ -5,19 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../FetcherMicroService/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ai-enrichment/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ai-enrichment/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/database/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/database/database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/entity/score.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/entity/score.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/repository/score_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/repository/score_repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/service/score_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/service/score_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,26 +58,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Ara_Proje_Backend/AuthMikroService&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;7d710c611205d06fd38cfae33f449e3f&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/Ara_Proje_Backend/FetcherMicroService",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "spring.configuration.checksum": "7d710c611205d06fd38cfae33f449e3f",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Ara_Proje_Backend\AuthMikroService" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="AuthMikroServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="AuthMikroService" />
@@ -104,7 +108,7 @@
       <workItem from="1761064257974" duration="8177000" />
       <workItem from="1762182567095" duration="4659000" />
       <workItem from="1762245425334" duration="577000" />
-      <workItem from="1762259547678" duration="1173000" />
+      <workItem from="1762259547678" duration="6717000" />
     </task>
     <servers />
   </component>

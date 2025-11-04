@@ -4,3 +4,6 @@ httpx
 beautifulsoup4
 lxml
 pydantic-settings
+sqlalchemy
+psycopg2-binary
+elasticsearch

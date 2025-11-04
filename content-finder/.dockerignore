@@ -1,0 +1,24 @@
+# Git
+.git/
+.gitignore
+
+# Python Sanal Ortamları (ÇOK ÖNEMLİ!)
+venv/
+.venv/
+env/
+.env
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE ve OS Dosyaları
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test ve Coverage
+.pytest_cache/
+.coverage

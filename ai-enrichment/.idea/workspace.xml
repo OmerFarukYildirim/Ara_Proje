@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1691d67d-497d-4ecd-8fcf-24124eced44d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FetcherMicroService/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../content-finder/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +60,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Ara_Proje_Backend\ai-enrichment" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="ai-enrichment" type="Python.FastAPI">
       <option name="file" value="$PROJECT_DIR$/main.py" />
@@ -87,6 +104,7 @@
       <workItem from="1761860376889" duration="2506000" />
       <workItem from="1761993051859" duration="2218000" />
       <workItem from="1762242529284" duration="1423000" />
+      <workItem from="1762286025207" duration="2473000" />
     </task>
     <servers />
   </component>

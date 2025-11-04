@@ -1,0 +1,20 @@
+# Git
+.git/
+.gitignore
+
+# Build Çıktıları (EN ÖNEMLİSİ!)
+bin/
+obj/
+
+# IDE ve OS Dosyaları
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+.DS_Store
+Thumbs.db
+
+# Kullanıcıya özel dosyalar
+*.csproj.user
+*.sln.docstates

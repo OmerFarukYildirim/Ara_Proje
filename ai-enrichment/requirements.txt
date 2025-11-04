@@ -3,3 +3,5 @@ uvicorn[standard]
 httpx
 elasticsearch==7.17.9
 pydantic-settings
+sqlalchemy
+psycopg2-binary

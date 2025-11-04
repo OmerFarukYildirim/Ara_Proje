@@ -1,0 +1,18 @@
+# Git
+.git/
+.gitignore
+
+# Lokal olarak derlenmiş binary (eğer varsa)
+*.exe
+Recommender
+app
+
+# IDE ve OS Dosyaları
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build Çıktıları (genel)
+bin/
+pkg/
