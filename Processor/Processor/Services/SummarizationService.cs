@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 
 namespace Processor.Services;
-
+using Processor.Models;
 public class SummarizationService
 {
     private readonly HttpClient _httpClient;

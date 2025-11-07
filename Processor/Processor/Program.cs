@@ -1,38 +1,36 @@
-
-using Processor.Services; // Kendi servislerimizi ekliyoruz
+using Processor.Services;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+// WebApplication yerine Host (Arka plan işçisi) kullan
+var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// 1. Özetleme Servisimizi 'Scoped' olarak ekle
+builder.Services.AddScoped<SummarizationService>();
+
+// 2. Kafka Worker (İşçi) Servisimizi ekle
+builder.Services.AddHostedService<KafkaWorker>();
+
+
+// --- HttpClient Ayarları (HuggingFace için aynı kalır) ---
+
+// IHttpClientFactory ekle
+builder.Services.AddHttpClient(); 
 
 // 1. Hugging Face için HttpClient (Token'ı ayarlar)
 var hfApiKey = builder.Configuration["HuggingFace:ApiKey"];
 builder.Services.AddHttpClient("HuggingFace", client =>
 {
+    // API Key'i auth header'a ekle
     client.DefaultRequestHeaders.Authorization = 
         new AuthenticationHeaderValue("Bearer", hfApiKey);
 });
 
-// 2. AI-Enrichment'a paslamak için HttpClient (Base URL'i ayarlar)
-var aiUrl = builder.Configuration["AiEnrichment:Url"];
-builder.Services.AddHttpClient("AiEnrichment", client =>
-{
-    client.BaseAddress = new Uri(aiUrl!);
-});
-
-// 3. Özetleme Servisimizi 'Scoped' olarak ekle
-builder.Services.AddScoped<SummarizationService>();
+// Artık Controller'lar, Swagger, Authorization gibi şeylere GEREK YOK.
+// builder.Services.AddControllers(); // KALDIRILDI
+// builder.Services.AddEndpointsApiExplorer(); // KALDIRILDI
+// builder.Services.AddSwaggerGen(); // KALDIRILDI
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseAuthorization();
-app.MapControllers(); // Controller'ları aktif et
-app.Run();
+await app.RunAsync();

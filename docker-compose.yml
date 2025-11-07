@@ -1,23 +1,67 @@
 version: '3.8'
 
-# Tüm servislerimizin içinde yaşayacağı özel bir ağ (network) oluşturalım
 networks:
   ara_proje_network:
     driver: bridge
 
 services:
+  # --- KAFKA ALTYAPISI (Buraya taşındı) ---
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - ara_proje_network
 
-  # --- 1. VERİTABANI & ALTYAPI (3 ADET POSTGRES) ---
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - ara_proje_network
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8085:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "Yerel Kafka"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+      KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper:2181"
+    networks:
+      - ara_proje_network
+    depends_on:
+      - kafka
+      - zookeeper
+
+  # --- DİĞER ALTYAPI ---
   postgres_auth:
     image: postgres:15-alpine
     container_name: postgres_auth
     environment:
-      POSTGRES_USER: postgres #
-      POSTGRES_PASSWORD: 12345 #
-      POSTGRES_DB: authmicroservicedb #
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: authmicroservicedb
     ports:
-      - "5432:5432" # Auth DB (DBeaver localhost:5432)
+      - "5430:5432"
     networks:
       - ara_proje_network
     volumes:
@@ -27,26 +71,25 @@ services:
     image: postgres:15-alpine
     container_name: postgres_recommender
     environment:
-      POSTGRES_USER: postgres #
-      POSTGRES_PASSWORD: 12345 #
-      POSTGRES_DB: recommender_db #
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: recommender_db
     ports:
-      - "5433:5432" # Recommender DB (DBeaver localhost:5433)
+      - "5433:5432"
     networks:
       - ara_proje_network
     volumes:
       - postgres_rec_data:/var/lib/postgresql/data
 
-  # YENİ: Content-Finder için UserReads DB
   postgres_userreads:
     image: postgres:15-alpine
     container_name: postgres_userreads
     environment:
-      POSTGRES_USER: postgres #
-      POSTGRES_PASSWORD: 12345 #
-      POSTGRES_DB: UserReads #
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: UserReads
     ports:
-      - "5434:5432" # UserReads DB (DBeaver localhost:5434)
+      - "5434:5432"
     networks:
       - ara_proje_network
     volumes:
@@ -56,7 +99,7 @@ services:
     image: redis:7-alpine
     container_name: redis_cache
     ports:
-      - "6379:6379" #
+      - "6379:6379"
     networks:
       - ara_proje_network
 
@@ -68,34 +111,33 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
     ports:
-      - "9200:9200" #
+      - "9200:9200"
       - "9300:9300"
     networks:
       - ara_proje_network
 
-  # --- 2. MİKROSERVİSLER ---
-
+  # --- MİKROSERVİSLER ---
   auth-service:
-    build: ./AuthMikroService # (AuthMicroService/Dockerfile olmalı)
+    build: ./AuthMikroService
     container_name: auth-service
     ports:
-      - "8090:8090" #
+      - "8090:8090"
     environment:
       SERVER_PORT: 8090
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_auth:5432/authmicroservicedb
-      SPRING_DATASOURCE_USERNAME: postgres #
-      SPRING_DATASOURCE_PASSWORD: 12345 #
-      SECRETEJWTSTRING: "ara123456789proje123456789ara123456789proje123456789" #
-      APP_SECURITY_API_KEY_HEADER: "X-API-KEY" #
-      APP_SECURITY_API_KEY_VALUE: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh" #
-      AWS_S3_REGION: "eu-north-1" #
-      AWS_S3_BUCKET: "opt-app-dev" #
-      AWS_ACCESSKEYID: "AKIA6I7UT46DUIDI7OQ2" #
-      AWS_SECRETKEY: "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" #
-      SPRING_MAIL_HOST: "smtp.gmail.com" #
-      SPRING_MAIL_PORT: 587 #
-      SPRING_MAIL_USERNAME: "omeeryldrmm03@gmail.com" #
-      SPRING_MAIL_PASSWORD: "ivog exhh oime yued" #
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SECRETEJWTSTRING: "ara123456789proje123456789ara123456789proje123456789"
+      APP_SECURITY_API_KEY_HEADER: "X-API-KEY"
+      APP_SECURITY_API_KEY_VALUE: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
+      AWS_S3_REGION: "eu-north-1"
+      AWS_S3_BUCKET: "opt-app-dev"
+      AWS_ACCESSKEYID: "AKIA6I7UT46DUIDI7OQ2"
+      AWS_SECRETKEY: "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"
+      SPRING_MAIL_HOST: "smtp.gmail.com"
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: "omeeryldrmm03@gmail.com"
+      SPRING_MAIL_PASSWORD: "ivog exhh oime yued"
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
@@ -105,90 +147,97 @@ services:
       - postgres_auth
 
   fetcher-service:
-    build: ./FetcherMicroService # (FetcherMicroService/Dockerfile olmalı)
+    build: ./FetcherMicroService
     container_name: fetcher-service
     ports:
-      - "8091:8091" #
+      - "8091:8091"
     environment:
       SERVER_PORT: 8091
-      # application.properties dosyasındaki 'localhost'ları değiştiriyoruz:
-      PROCESSOR_SERVICE_URL: "http://processor-service:80" # C# içeride 80'de çalışır
-      # NewsService.java'da gördüğümüz 'pipeline.start.url'
-      PIPELINE_START_URL: "http://content-finder-service:8001"
-      NEWSAPI_KEY: "43949a6324754952bcc9fb9d59875c1a" #
-      NEWSAPI_BASE_URL: "https://newsapi.org/v2" #
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: fetcher-group
+      KAFKA_TOPIC_NEWS_REQUEST: haber_talebi_topic
+      KAFKA_TOPIC_NEWS_PROCESSED: haber_zenginlestirme_topic
     networks:
       - ara_proje_network
     depends_on:
-      - processor-service
-      - content-finder-service
+      - kafka
 
   processor-service:
-    build: ./Processor # (ProcessorService/Dockerfile olmalı)
+    build: ./Processor
     container_name: processor-service
     ports:
-      - "8003:80" # Host Port 8003, Container Port 80 (C# varsayılanı)
+      - "8003:80"
     environment:
-      # appsettings.json 'daki 'localhost'ları değiştiriyoruz (__ kullanılır):
-      AiEnrichment__Url: "http://ai-enrichment-service:8000"
-      HuggingFace__ApiKey: "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" #
+      Kafka__Broker: kafka:9092
+      Kafka__ConsumerTopic: haber_zenginlestirme_topic
+      Kafka__ProducerTopic: haber_isleme_topic
+      HuggingFace__ApiKey: "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"
+      HuggingFace__ApiUrl: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
     networks:
       - ara_proje_network
     depends_on:
-      - ai-enrichment-service
+      - kafka
 
   ai-enrichment-service:
-    build: ./ai-enrichment # (AIEnrichmentService/Dockerfile olmalı)
+    build: ./ai-enrichment
     container_name: ai-enrichment-service
     ports:
-      - "8000:8000" # Host Port 8000, Container Port 8000 (Python varsayılanı)
+      - "8000:8000"
     environment:
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_TOPIC_CONSUME: haber_isleme_topic
+      KAFKA_CONSUMER_GROUP: "ai-enrichment-group"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
-      hf_api_key: "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"
+      hf_api_key: "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"
+      
     networks:
       - ara_proje_network
     depends_on:
       - elasticsearch
+      - kafka
 
-  # YENİ: Content-Finder Servisi (Port 8001)
   content-finder-service:
-    build: ./content-finder # (Bu adda bir klasör ve Dockerfile olmalı)
+    build: ./content-finder
     container_name: content-finder-service
     ports:
-      - "8001:8001" # Host Port 8001
+      - "8001:8001"
     environment:
-      SERVER_PORT: 8001 # (Eğer Spring ise)
-      # .env dosyasındaki 'localhost'ları değiştiriyoruz:
       DATABASE_URL: "postgresql://postgres:12345@postgres_userreads:5432/UserReads"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
-      FETCHER_SERVICE_URL: "http://fetcher-service:8091"
+      KAFKA_BROKERS: "kafka:9092"
+      KAFKA_TOPIC_NEWS_REQUEST: "haber_talebi_topic"
+      RECOMMENDER_SERVICE_URL: "http://recommender-service:8004"
+      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
     networks:
       - ara_proje_network
     depends_on:
       - postgres_userreads
       - elasticsearch
+      - kafka
 
   recommender-service:
-    build: ./Recommender # (Recommender/Dockerfile olmalı)
+    build: ./Recommender
     container_name: recommender-service
     ports:
-      - "8004:8004" # Host Port 8004
+      - "8004:8004"
     environment:
-      PORT: "8004" # Go servisine içeride 8004'te çalışmasını söyler
-      # .env dosyasındaki 'localhost'ları değiştiriyoruz:
+      PORT: "8004"
       DATABASE_URL: "postgresql://postgres:12345@postgres_recommender:5432/recommender_db"
       REDIS_ADDR: "redis_cache:6379"
-      AUTH_SERVICE_URL: "http://auth-service:8090" # Auth'un 8090 portuna git
-      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh" #
+      AUTH_SERVICE_URL: "http://auth-service:8090"
+      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
+      KAFKA_BROKERS: "kafka:9092"
+      KAFKA_TOPIC_ONBOARDING: "onboarding_events"
+      KAFKA_TOPIC_INTERACTION: "interaction_events"
     networks:
       - ara_proje_network
     depends_on:
       - postgres_recommender
       - redis_cache
       - auth-service
+      - kafka
 
-# Docker'ın veritabanı verilerini (container silinse bile) kaybetmemesi için disk alanları
 volumes:
   postgres_auth_data:
   postgres_rec_data:
-  postgres_userreads_data: # YENİ
+  postgres_userreads_data:

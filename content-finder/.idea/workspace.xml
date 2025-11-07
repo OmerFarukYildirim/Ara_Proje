@@ -5,20 +5,447 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="758bc916-2cdb-4f22-a77b-0d40d0a10479" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../FetcherMicroService/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ai-enrichment/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ai-enrichment/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/apiconfig/WebClientConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/controller/NewsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/ArticleDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/ArticleDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/FetcherMicroServiceApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/FetcherMicroServiceApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/apiconfig/WebClientConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/controller/NewsController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/dtos/ArticleDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/dtos/ArticleDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/dtos/NewsResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/dtos/NewsResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/services/NewsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/target/classes/com/FetcherMicroService/services/NewsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/Controllers/ProcessorController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/Processor.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/Processor.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/Services/SummarizationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/Services/SummarizationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/Processor.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/bin/Debug/net9.0/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/models.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/Processor.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/ref/Processor.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/ref/Processor.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/refint/Processor.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Debug/net9.0/refint/Processor.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/Processor.csproj.nuget.g.targets" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Processor/Processor/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Processor/Processor/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/middleware/auth_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/middleware/auth_middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/repository/score_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/repository/score_repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Recommender/service/score_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/service/score_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/INSTALLER" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/METADATA" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/NOTICE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/RECORD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/REQUESTED" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/WHEEL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch-7.17.9.dist-info/top_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/__init__.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/_extra_imports.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/__init__.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/async_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/async_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/async_search.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/autoscaling.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/autoscaling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/autoscaling.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cat.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cat.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ccr.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ccr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ccr.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cluster.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cluster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/cluster.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/dangling_indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/dangling_indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/dangling_indices.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/data_frame.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/data_frame.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/deprecation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/deprecation.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/enrich.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/enrich.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/enrich.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/eql.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/eql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/eql.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/features.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/features.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/features.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/fleet.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/fleet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/fleet.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/graph.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ilm.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ilm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ilm.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/indices.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ingest.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ingest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ingest.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/license.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/license.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/license.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/logstash.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/logstash.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/logstash.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/migration.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/migration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/migration.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ml.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/monitoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/monitoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/monitoring.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/nodes.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/nodes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/nodes.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/remote.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/remote.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/rollup.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/rollup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/rollup.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/searchable_snapshots.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/searchable_snapshots.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/searchable_snapshots.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/security.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/security.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/shutdown.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/shutdown.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/shutdown.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/slm.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/slm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/slm.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/snapshot.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/sql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/sql.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ssl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/ssl.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/tasks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/tasks.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/text_structure.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/text_structure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/text_structure.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/transform.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/utils.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/watcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/watcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/watcher.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/xpack.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/xpack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/client/xpack.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/compat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/compat.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/helpers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/helpers.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/http_aiohttp.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/http_aiohttp.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/transport.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_async/transport.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/__init__.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/async_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/async_search.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/autoscaling.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/autoscaling.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/cat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/cat.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ccr.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ccr.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/cluster.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/cluster.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/dangling_indices.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/dangling_indices.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/data_frame.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/data_frame.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/deprecation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/deprecation.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/enrich.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/enrich.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/eql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/eql.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/features.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/features.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/fleet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/fleet.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/graph.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ilm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ilm.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/indices.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/indices.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ingest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ingest.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/license.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/license.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/logstash.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/logstash.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/migration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/migration.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ml.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ml.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/monitoring.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/monitoring.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/nodes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/nodes.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/remote.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/remote.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/rollup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/rollup.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/searchable_snapshots.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/searchable_snapshots.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/security.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/security.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/shutdown.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/shutdown.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/slm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/slm.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/snapshot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/snapshot.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/sql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/sql.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ssl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/ssl.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/tasks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/tasks.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/text_structure.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/text_structure.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/transform.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/transform.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/utils.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/watcher.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/watcher.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/xpack.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/client/xpack.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/compat.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/compat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/compat.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/__init__.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/base.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/http_requests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/http_requests.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/http_urllib3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/http_urllib3.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/pooling.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection/pooling.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection_pool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/connection_pool.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/exceptions.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/__init__.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/actions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/actions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/actions.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/errors.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/helpers/test.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/serializer.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/transport.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/transport.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/transport.pyi" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.venv/Lib/site-packages/elasticsearch/utils.pyi" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ai-enrichment/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/INSTALLER" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/METADATA" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/RECORD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/WHEEL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/licenses/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/licenses/NOTICE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport-9.2.0.dist-info/top_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_async_transport.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_async_transport.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_node/_http_aiohttp.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_node/_http_aiohttp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_node/_http_httpx.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_node/_http_httpx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_otel.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_otel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_transport.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_transport.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elastic_transport/_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/INSTALLER" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/METADATA" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/RECORD" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/REQUESTED" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/WHEEL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/licenses/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch-9.2.0.dist-info/licenses/NOTICE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/async_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/async_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/autoscaling.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/autoscaling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/cat.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/cat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ccr.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ccr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/cluster.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/cluster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/connector.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/dangling_indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/dangling_indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/enrich.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/enrich.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/eql.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/eql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/esql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/features.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/features.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/fleet.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/fleet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ilm.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ilm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/inference.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ingest.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ingest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/license.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/license.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/logstash.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/logstash.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/migration.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/migration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/monitoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/monitoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/nodes.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/nodes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/project.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/query_rules.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/rollup.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/rollup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/search_application.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/search_application.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/searchable_snapshots.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/searchable_snapshots.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/security.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/shutdown.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/shutdown.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/simulate.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/slm.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/slm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/sql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/ssl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/streams.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/synonyms.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/synonyms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/tasks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/text_structure.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/text_structure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/watcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/watcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/xpack.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/client/xpack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_async/helpers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_otel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/async_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/async_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/autoscaling.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/autoscaling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/cat.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/cat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ccr.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ccr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/cluster.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/cluster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/connector.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/dangling_indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/dangling_indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/enrich.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/enrich.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/eql.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/eql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/esql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/features.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/features.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/fleet.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/fleet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ilm.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ilm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/indices.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/indices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/inference.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ingest.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ingest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/license.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/license.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/logstash.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/logstash.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/migration.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/migration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/monitoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/monitoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/nodes.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/nodes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/project.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/query_rules.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/rollup.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/rollup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/search_application.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/search_application.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/searchable_snapshots.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/searchable_snapshots.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/security.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/shutdown.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/shutdown.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/simulate.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/slm.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/slm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/sql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ssl.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/ssl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/streams.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/synonyms.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/synonyms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/tasks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/text_structure.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/text_structure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/watcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/watcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/xpack.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_sync/client/xpack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/compat.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/compat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/document.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/faceted_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/mapping.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_async/update_by_query.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/document.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/faceted_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/mapping.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/_sync/update_by_query.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/aggs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/async_connections.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/connections.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/document.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/document_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/exceptions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/faceted_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/faceted_search_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/field.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/function.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/index_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/mapping.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/mapping_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/pydantic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/query.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/response/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/response/aggs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/response/hit.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/search_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/serializer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/types.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/update_by_query.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/update_by_query_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/dsl/wrappers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/esql/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/esql/esql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/esql/functions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/actions.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/actions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_async/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_async/_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_async/embedding_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_async/strategies.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_async/vectorstore.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_sync/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_sync/_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_sync/embedding_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_sync/strategies.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_sync/vectorstore.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/helpers/vectorstore/_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/Lib/site-packages/elasticsearch/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +477,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Ara_Proje_Backend/content-finder",
+    "last_opened_file_path": "D:/Ara_Proje_Backend/ai-enrichment",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,6 +530,9 @@
       <workItem from="1761912385652" duration="2974000" />
       <workItem from="1761993010080" duration="1048000" />
       <workItem from="1762286114477" duration="2469000" />
+      <workItem from="1762402008136" duration="4291000" />
+      <workItem from="1762416103169" duration="1728000" />
+      <workItem from="1762437195089" duration="237000" />
     </task>
     <servers />
   </component>

@@ -93,93 +93,157 @@ func (h *ScoreHandler) HandleInteraction(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "score_updated"})
 }*/
 
-
 package handler
 
 import (
-	"context" // Arka plan 'go' rutini için
+	"context"       // Arka plan 'rebuild' işlemi için
+	"encoding/json" // Kafka'ya JSON yollamak için
 	"log"
 	"net/http"
-	"recommender/service"
+	"recommender/config"  // Topic (kuyruk) isimleri için
+	"recommender/kafka"   // Yeni Kafka Producer
+	"recommender/service" // Input struct'ları ve 'Rebuild' için
 
 	"github.com/gin-gonic/gin"
 )
 
+// ScoreHandler, artık hem Kafka'ya hızlı yazmak (Producer)
+// hem de yavaş işlemleri (Rebuild) tetiklemek için Service'e bağımlıdır.
 type ScoreHandler struct {
-	service *service.ScoreService
+	producer *kafka.Producer
+	service  *service.ScoreService
 }
 
-func NewScoreHandler(s *service.ScoreService) *ScoreHandler {
-	return &ScoreHandler{service: s}
+// NewScoreHandler, her iki bağımlılığı da enjekte eder (Dependency Injection).
+func NewScoreHandler(p *kafka.Producer, s *service.ScoreService) *ScoreHandler {
+	return &ScoreHandler{producer: p, service: s}
 }
 
-// --- 1. ENDPOINT: Başlangıç Seçimi (Onboarding) ---
+// --- 1. ENDPOINT: Onboarding (Kafka'ya Atar - HIZLI) ---
 func (h *ScoreHandler) HandleOnboarding(c *gin.Context) {
 	var input service.OnboardingInput
+
+	// 1. JSON'u al (input.UserID eğer JSON'da varsa burada dolacak)
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz JSON yapısı: " + err.Error()})
 		return
 	}
 
-	// UserID'yi JSON'dan değil, Middleware Context'inden al
-	userID, _ := c.Get("userID")
-	input.UserID = userID.(int64) 
+	// 2. Auth Middleware'den UserID gelmiş mi kontrol et (JWT durumunda gelir)
+	// EĞER X-API-KEY İLE GELDİYSE BURASI BOŞ OLABİLİR VE BU NORMALDİR.
+	if userIDValue, exists := c.Get("userID"); exists {
+		// Eğer context'te varsa, JSON'dan geleni ez (güvenlik için)
+		if id, ok := userIDValue.(int64); ok {
+			input.UserID = id
+		}
+	}
 
-	err := h.service.ProcessOnboarding(c.Request.Context(), &input)
-	if err != nil {
-		log.Printf("Hata: Onboarding işlenemedi: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Skorlar kaydedilemedi: " + err.Error()})
+	// 🚨 YENİ EKLEME: AuthHeader'ı al ve struct'a ekle
+	authHeader := c.GetHeader("Authorization") // Örn: "Bearer eyJ..."
+	input.AuthHeader = authHeader // Yeni alana kaydet
+	
+	// 3. Son Kontrol: UserID hala 0 ise (ne JSON'dan ne Context'ten gelmediyse) hata ver
+	if input.UserID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Kullanıcı ID (user_id) eksik"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "success", "user_id": input.UserID})
+
+	// 3. Kafka'ya yollanacak mesajı hazırla
+	messageBytes, err := json.Marshal(input)
+	if err != nil {
+		log.Printf("Hata: Onboarding JSON Marshal edilemedi: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Mesaj oluşturulamadı"})
+		return
+	}
+
+	// 4. Kafka'ya "ateşle"
+	topic := config.Get("KAFKA_TOPIC_ONBOARDING")
+	if err := h.producer.Publish(topic, messageBytes); err != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Olay iletilemedi (Kafka)"})
+		return
+	}
+
+	// 5. Kullanıcıyı bekletme! (Asenkron)
+	c.JSON(http.StatusAccepted, gin.H{"status": "Onboarding isteği kabul edildi."})
 }
 
-// --- 2. ENDPOINT: Etkileşim Takibi (Interaction) ---
+// --- 2. ENDPOINT: Interaction (Kafka'ya Atar - HIZLI) ---
 func (h *ScoreHandler) HandleInteraction(c *gin.Context) {
 	var input service.InteractionInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz JSON yapısı: " + err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz JSON: " + err.Error()})
 		return
 	}
 
-	// UserID'yi JSON'dan değil, Middleware Context'inden al
-	userID, _ := c.Get("userID")
-	input.UserID = userID.(int64)
+	if userIDValue, exists := c.Get("userID"); exists {
+		if id, ok := userIDValue.(int64); ok {
+			input.UserID = id
+		}
+	}
 
-	err := h.service.ProcessInteraction(c.Request.Context(), &input)
+	if input.UserID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Kullanıcı ID eksik"})
+		return
+	}
+
+	// 3. Kafka'ya yollanacak mesajı hazırla
+	messageBytes, err := json.Marshal(input)
 	if err != nil {
-		log.Printf("Hata: Etkileşim işlenemedi: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Skor güncellenemedi: " + err.Error()})
+		log.Printf("Hata: Interaction JSON Marshal edilemedi: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Mesaj oluşturulamadı"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "score_updated"})
+
+	// 4. Kafka'ya "ateşle"
+	topic := config.Get("KAFKA_TOPIC_INTERACTION")
+	if err := h.producer.Publish(topic, messageBytes); err != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Etkileşim iletilemedi (Kafka)"})
+		return
+	}
+
+	// 5. Kullanıcıyı bekletme! (Asenkron)
+	c.JSON(http.StatusAccepted, gin.H{"status": "Etkileşim kabul edildi."})
 }
 
-
-// --- 3. ENDPOINT: Kurtarma (YENİ) ---
-
-// HandleRebuildCache, POST /api/rebuild-cache isteğini yakalar.
-// Admin paneli olmadığı için normal 'auth' ile korunur.
+// --- 3. ENDPOINT: Kurtarma (Doğrudan Service'i Çağırır - YAVAŞ) ---
+// (Bu fonksiyon bir önceki cevaptakiyle %100 aynı)
 func (h *ScoreHandler) HandleRebuildCache(c *gin.Context) {
 	log.Println("Redis kurtarma (Rebuild) isteği alındı...")
 
-	// Bu işlem ÇOK UZUN sürebilir (milyonlarca kullanıcı/kayıt).
-	// HTTP isteğinin timeout'a girmemesi için işlemi arka planda (go routine)
-	// başlatıp, isteği atana hemen "işlem başladı" yanıtı dönmek
-	// profesyonel bir yaklaşımdır (Asenkron İşlem).
+	// İşlemi asenkron (arka planda) başlat
 	go func() {
-		// Arka planda çalışacak olan işleme, HTTP isteğinden bağımsız
-		// yeni bir 'context' veririz.
-		_, err := h.service.RebuildAllScores(context.Background())
+		// HTTP isteğinden bağımsız yeni bir context oluştur
+		ctx := context.Background()
+		processedCount, err := h.service.RebuildAllScores(ctx)
 		if err != nil {
 			log.Printf("KRİTİK HATA: Arka plan Redis kurtarma işlemi başarısız: %v", err)
 		} else {
-			log.Println("Arka plan Redis kurtarma işlemi başarıyla tamamlandı.")
+			log.Println("Arka plan Redis kurtarma işlemi başarıyla tamamlandı. İşlenen kullanıcı: ", processedCount)
 		}
 	}()
-	
-	// '202 Accepted': "İsteğini aldım, anladım, arka planda yapıyorum"
+
+	// Kullanıcıya "işlem başladı" de
 	c.JSON(http.StatusAccepted, gin.H{
 		"status": "Kurtarma (Rebuild) işlemi arka planda başlatıldı.",
 	})
+}
+
+// YENİ: GET /api/recommendations/:user_id
+func (h *ScoreHandler) HandleGetRecommendations(c *gin.Context) {
+	// Middleware (artık X-API-Key'i de destekliyor) 'userID'yi zaten context'e ekledi.
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "UserID context'te bulunamadı"})
+		return
+	}
+
+	rankedCategories, err := h.service.GetRankedCategories(c.Request.Context(), userID.(int64))
+	if err != nil {
+		log.Printf("Hata: Sıralı kategoriler alınamadı: %v", err)
+		c.JSON(http.StatusNotFound, gin.H{"error": "Kullanıcı skorları bulunamadı: " + err.Error()})
+		return
+	}
+
+	// Başarılı: Python servisine sıralı listeyi dön
+	c.JSON(http.StatusOK, gin.H{"categories": rankedCategories})
 }

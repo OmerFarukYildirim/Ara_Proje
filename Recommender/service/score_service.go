@@ -240,13 +240,20 @@ import (
 	"context"
 	"encoding/json" // Kurtarma fonksiyonu için
 	"fmt"
+	"io"
 	"log"
+	"net/http"
+	"recommender/config"
 	"recommender/entity"
 	"recommender/repository"
 	"reflect" // Struct'taki alanı isme göre bulmak için
+	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/redis/go-redis/v9" // Hata kontrolü için
+	// Sıralama için
+	// String -> Float dönüşümü için
 )
 
 // --- Skorlama Ayarları (Aynı) ---
@@ -260,9 +267,15 @@ const (
 	ScoreClampMax        float32 = 99.9
 )
 
+// YENİ: Sıralama için yardımcı struct
+type rankedCategory struct {
+	Name  string
+	Score float64
+}
+
 // --- Input Modelleri (Aynı) ---
 type InteractionInput struct {
-	UserID             int64   `json:"-"`
+	UserID             int64   `json:"user_id"` // <-- GÜNCELLENDİ (json:"-" DEĞİL)
 	NewsID             string  `json:"news_id"`
 	Category           string  `json:"category"`
 	Like               string  `json:"like"`
@@ -274,8 +287,10 @@ type InteractionInput struct {
 }
 
 type OnboardingInput struct {
-	UserID     int64    `json:"-"`
+	UserID     int64    `json:"user_id"` // <-- GÜNCELLENDİ (json:"-" DEĞİL)
 	Categories []string `json:"categories"`
+
+	AuthHeader string `json:"auth_header,omitempty"`
 }
 
 // --- Service ve Constructor (Aynı) ---
@@ -288,7 +303,7 @@ func NewScoreService(r *repository.ScoreRepository) *ScoreService {
 }
 
 // --- 1. İşlev: Başlangıç Seçimi (Refactor Edildi) ---
-func (s *ScoreService) ProcessOnboarding(ctx context.Context, input *OnboardingInput) error {
+func (s *ScoreService) ProcessOnboarding(ctx context.Context, input *OnboardingInput, authHeader string) error {
 	// 1. Boş skor struct'ı oluştur
 	newUserScore := &entity.UserScore{UserID: input.UserID}
 
@@ -299,6 +314,11 @@ func (s *ScoreService) ProcessOnboarding(ctx context.Context, input *OnboardingI
 	if err := s.repo.SetScoresInCache(ctx, newUserScore); err != nil {
 		return fmt.Errorf("Redis'e onboarding skoru yazılamadı: %w", err)
 	}
+
+	// 🚨 YENİ EKLEME: Auth servisini çağır
+	// Bu çağrıyı da Postgres loglama gibi ASENKRON (arka plan) yapmalıyız
+	// ki kullanıcıyı bekletmesin.
+	go s.callUpdateFirstLogin(context.Background(), input.UserID, authHeader)
 
 	// 4. Bu olayı Postgres'e logla (Asenkron)
 	go func() {
@@ -319,11 +339,16 @@ func (s *ScoreService) ProcessInteraction(ctx context.Context, input *Interactio
 	if err != nil {
 		if err == redis.Nil { // Hata kontrolü 'redis.Nil' ile yapılmalı
 			log.Printf("Kullanıcı %d Redis'te bulunamadı, varsayılan skorlarla oluşturuluyor...", input.UserID)
+
 			// Varsayılan (tümü 10.0) skorlarla bir 'onboarding' işlemi yap
 			onboardingInput := &OnboardingInput{UserID: input.UserID, Categories: []string{}}
-			if err := s.ProcessOnboarding(ctx, onboardingInput); err != nil {
+
+			// 🚨 GÜNCELLEME: Onboarding'i çağırırken JWT'nin olmadığını belirtmek için boş string ("") yolla.
+			// Bu, ProcessOnboarding içindeki Auth servisi çağrısını ATLAMASINI sağlayacaktır.
+			if err := s.ProcessOnboarding(ctx, onboardingInput, ""); err != nil { // 🚨 BURASI DEĞİŞTİ
 				return fmt.Errorf("yeni kullanıcı (Redis) oluşturulamadı: %w", err)
 			}
+
 			// Skoru tekrar çek
 			currentScores, err = s.repo.GetUserScoresFromCache(ctx, input.UserID)
 		}
@@ -536,4 +561,96 @@ func (s *ScoreService) setScoreByFieldName(scores *entity.UserScore, fieldName s
 	}
 	field.SetFloat(float64(value))
 	return nil
+}
+
+// YENİ: GetRankedCategories, skorları alır, sıralar ve kategori listesi döner.
+func (s *ScoreService) GetRankedCategories(ctx context.Context, userID int64) ([]string, error) {
+	// 1. Repodan skorları (map[string]string) olarak al
+	rawScores, err := s.repo.GetUserScores(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var rankedList []rankedCategory
+
+	// 2. Map'i 'rankedCategory' listesine çevir ve float'a dönüştür
+	for key, val := range rawScores {
+
+		if key == "user_id" || key == "id" {
+			continue // Bu döngüyü atla
+		}
+		// Redis'ten gelen 'technology_score' gibi '_score' eklerini temizle
+		categoryName := strings.TrimSuffix(key, "_score")
+
+		score, err := strconv.ParseFloat(val, 64)
+		if err != nil {
+			log.Printf("Uyarı: Geçersiz skor formatı (UserID: %d, Kategori: %s, Değer: %s)", userID, key, val)
+			continue
+		}
+
+		rankedList = append(rankedList, rankedCategory{Name: categoryName, Score: score})
+	}
+
+	// 3. Listeyi puana göre BÜYÜKTEN KÜÇÜĞE doğru sırala
+	sort.Slice(rankedList, func(i, j int) bool {
+		return rankedList[i].Score > rankedList[j].Score
+	})
+
+	// 4. Sadece kategori isimlerinden oluşan bir string listesi döndür
+	var categoryNames []string
+	for _, item := range rankedList {
+		categoryNames = append(categoryNames, item.Name)
+	}
+
+	return categoryNames, nil
+}
+
+// YENİ: Auth servisine ilk girişin tamamlandığını bildiren fonksiyon.
+func (s *ScoreService) callUpdateFirstLogin(ctx context.Context, userID int64, authHeader string) {
+	// 1. Ayarları al
+	authServiceURL := config.Get("AUTH_SERVICE_URL")
+	updateURL := authServiceURL + "/api/users/updateFirstLogin"
+
+	// Postman'de gördüğünüz PUT isteğine uygun client oluştur
+	client := &http.Client{}
+
+	// JSON body oluştur (PUT isteği genellikle boş olabilir ama gönderelim)
+	// UserID'yi path'ten değil, genellikle JWT'den alır (bizim yapımızda)
+	// Auth servisinde userID zaten JWT'den alındığı için body boş kalabilir.
+	// Ancak PUT isteği olduğu için genellikle boş bir Reader kullanılır.
+	req, err := http.NewRequestWithContext(ctx, "PUT", updateURL, nil)
+	if err != nil {
+		log.Printf("Hata: Auth isteği oluşturulamadı: %v", err)
+		return
+	}
+
+	// 2. Başlıkları ekle
+	// JWT: Kullanıcının kimliğini doğrulayan başlık (Auth'un ilk kontrolü)
+	if authHeader != "" {
+		req.Header.Add("Authorization", authHeader) // 🚨 JWT EKLENDİ
+	} else {
+		// Bu normalde olmamalı, handler'da yakalanmalı
+		log.Printf("KRİTİK HATA: Kullanıcı %d için JWT bulunamadı. Auth servisi başarısız olabilir.", userID)
+	}
+
+	// X-API-Key: Servisler arası iletişim anahtarı (Auth'un ikinci kontrolü)
+	// Bu, isteğin güvenilir bir servisten geldiğini kanıtlar.
+	req.Header.Add("X-API-Key", config.Get("TRUSTED_API_KEY")) // 🚨 SERVİS ANAHTARI EKLENDİ
+
+	// 3. İsteği gönder
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("KRİTİK HATA: Auth servisine ('updateFirstLogin') ulaşılamadı: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// 4. Durum kodunu kontrol et
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		log.Printf("Hata: Auth servisi 'updateFirstLogin' başarısız oldu. Durum: %d, Yanıt: %s", resp.StatusCode, string(body))
+		return
+	}
+
+	log.Printf("✅ Kullanıcı %d için 'updateFirstLogin' başarıyla çağrıldı.", userID)
 }

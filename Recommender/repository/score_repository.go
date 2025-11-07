@@ -215,3 +215,20 @@ func (r *ScoreRepository) GetInteractionsForUser(ctx context.Context, userID int
 	}
 	return events, nil
 }
+
+// GetUserScores, bir kullanıcının tüm skorlarını Redis'ten (HGETALL) çeker.
+func (r *ScoreRepository) GetUserScores(ctx context.Context, userID int64) (map[string]string, error) {
+	key := fmt.Sprintf("user_score:%d", userID) // user_score:5
+
+	// HGETALL komutu, Redis'teki o 'key' altındaki tüm alanları (kategorileri)
+	// ve değerlerini (skorları) bir map olarak döner.
+	scores, err := r.rdb.HGetAll(ctx, key).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return nil, fmt.Errorf("kullanıcı skoru bulunamadı (UserID: %d)", userID)
+		}
+		return nil, fmt.Errorf("Redis HGETALL hatası: %w", err)
+	}
+
+	return scores, nil
+}

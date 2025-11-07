@@ -1,13 +1,15 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    # .env dosyasındaki değişken adlarıyla aynı olmalı
     hf_api_key: str
     elasticsearch_url: str
 
-    class Config:
-        env_file = ".env" # .env dosyasını oku
+    # --- YENİ ---
+    kafka_brokers: str
+    kafka_topic_consume: str
+    kafka_consumer_group: str
 
-# settings adında bir nesne oluşturuyoruz
-# Artık projenin her yerinden "settings.hf_api_key" diyerek bu bilgiye erişebileceğiz.
+    class Config:
+        env_file = ".env"
+
 settings = Settings()
