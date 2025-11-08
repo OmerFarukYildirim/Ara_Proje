@@ -1,6 +1,5 @@
 package com.AuthMikroService.security;
 
-
 import com.AuthMikroService.exceptions.CustomAccessDenialHandler;
 import com.AuthMikroService.exceptions.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,28 +35,37 @@ public class SecurityFilter {
     private final CustomAccessDenialHandler customAccessDenialHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                // 🚨 GÜNCELLEME: Customizer.withDefaults() yerine kendi kaynağımızı kullanıyoruz
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .exceptionHandling(ex ->
                         ex.accessDeniedHandler(customAccessDenialHandler).authenticationEntryPoint(customAuthenticationEntryPoint))
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/auth/**").permitAll()
+                        req.requestMatchers("/api/auth/**", "/api/users/**").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(mag -> mag.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // --- DEĞİŞİKLİK BURADA ---
-                // Önce API Key filtresini ekliyoruz.
-                // Bu filtre, UsernamePasswordAuthenticationFilter'dan önce çalışacak.
                 .addFilterBefore(apiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // Mevcut JWT filtren, API Key filtresinden SONRA çalışmaya devam edecek.
-                // Spring, filtreleri sırasıyla çalıştıracağı için zincirdeki yeri önemli.
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
+    }
+
+    // 🚨 YENİ: CORS Yapılandırma Kaynağı
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*")); // Tüm originlere izin ver (dikkatli kullanın)
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        // 🚨 Frontend'in görmesi gereken başlıkları BURAYA ekleyin
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "X-API-KEY"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -64,19 +78,3 @@ public class SecurityFilter {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
