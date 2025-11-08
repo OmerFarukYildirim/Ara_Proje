@@ -7,7 +7,6 @@
     <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/security/ApiKeyAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/security/ApiKeyAuthFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +105,8 @@
       <workItem from="1762433970250" duration="660000" />
       <workItem from="1762501791599" duration="28000" />
       <workItem from="1762612332348" duration="1370000" />
-      <workItem from="1762631620575" duration="1099000" />
+      <workItem from="1762631620575" duration="2237000" />
+      <workItem from="1762635685347" duration="1611000" />
     </task>
     <servers />
   </component>

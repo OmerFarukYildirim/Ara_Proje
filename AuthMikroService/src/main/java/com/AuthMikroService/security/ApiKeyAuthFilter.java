@@ -36,6 +36,20 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
+        // YENİ EKLENEN KISIM BAŞLANGICI
+        // ==================================================
+        // Authorization başlığını kontrol et (JWT için)
+        String authorizationHeader = request.getHeader("Authorization");
+
+        // Eğer istek "Bearer " ile başlıyorsa, bu bir JWT isteğidir.
+        // Bu filtrenin görevi değil. Kenara çekil ve bir sonraki filtreye (AuthFilter) devret.
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return; // Bu filtreden hemen çık
+        }
+        // ==================================================
+        // YENİ EKLENEN KISIM SONU
+
         String requestApiKey = request.getHeader(apiKeyHeader);
 
         if (requestApiKey == null || !requestApiKey.equals(correctApiKey)) {
