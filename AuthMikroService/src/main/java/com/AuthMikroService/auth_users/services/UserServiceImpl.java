@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentLoggedInUser();
 
         user.setFirstLogin(false);
-
+        userRepository.save(user);
         UserDTO userDTO = modelMapper.map(user,UserDTO.class);
 
         return Response.<UserDTO>builder()
