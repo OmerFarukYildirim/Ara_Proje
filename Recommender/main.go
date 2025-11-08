@@ -87,7 +87,9 @@ import (
 	"os"
 	"os/signal" // Graceful shutdown için
 	"syscall"   // Graceful shutdown için
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"recommender/cache"
@@ -182,6 +184,21 @@ func main() {
 // setupRouter, Gin router'ını ve endpoint'leri ayarlar (Clean Code)
 func setupRouter(scoreHandler *handler.ScoreHandler, authMiddleware *middleware.AuthMiddleware) *gin.Engine {
 	r := gin.Default()
+
+	// --- ÇÖZÜM BURADA ---
+	// CORS Middleware'ini router'a ekle
+	// React uygulamasının gönderdiği tüm başlıkları (Headers) ve metodları (Methods)
+	// açıkça belirtmen gerekiyor.
+	r.Use(cors.New(cors.Config{
+		// React uygulamasının çalıştığı adresi yaz. Test için "*" kullanabilirsin.
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},              // OPTIONS'ı eklediğinden emin ol
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "x-api-key"}, // React'ın gönderdiği tüm başlıklar
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	// --- ÇÖZÜM SONU ---
 
 	// API Endpoint'leri
 	api := r.Group("/api")
