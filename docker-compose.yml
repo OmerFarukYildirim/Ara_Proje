@@ -157,6 +157,8 @@ services:
       SPRING_KAFKA_CONSUMER_GROUP_ID: fetcher-group
       KAFKA_TOPIC_NEWS_REQUEST: haber_talebi_topic
       KAFKA_TOPIC_NEWS_PROCESSED: haber_zenginlestirme_topic
+      LLM_API_KEY: AIzaSyAXBKULrDW9rTVr68n4NfLU8HjVJNmGYt0
+      LLM_API_BASEURL: https://generativelanguage.googleapis.com
     networks:
       - ara_proje_network
     depends_on:

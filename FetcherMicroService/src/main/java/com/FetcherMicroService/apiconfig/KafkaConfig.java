@@ -12,6 +12,9 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,5 +74,12 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder()
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
     }
 }

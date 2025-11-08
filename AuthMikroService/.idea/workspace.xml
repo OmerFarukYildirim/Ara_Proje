@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/security/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/security/SecurityFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -105,7 +101,7 @@
       <workItem from="1762423407564" duration="1194000" />
       <workItem from="1762433970250" duration="660000" />
       <workItem from="1762501791599" duration="28000" />
-      <workItem from="1762612332348" duration="1247000" />
+      <workItem from="1762612332348" duration="1370000" />
     </task>
     <servers />
   </component>
