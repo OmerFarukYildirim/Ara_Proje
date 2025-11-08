@@ -11,8 +11,29 @@ import httpx # YENİ: Recommender'ı çağırmak için
 from aiokafka import AIOKafkaProducer
 import asyncio
 from fastapi.security import APIKeyHeader
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# --- YENİ: CORS Middleware ---
+# API route'larından ÖNCE eklenmeli
+app.add_middleware(
+    CORSMiddleware,
+    # React uygulamasının adresini yazmalısın. Test için "*" (hepsi)
+    # production'da "http://localhost:3000" veya "https://seninsiten.com" gibi olmalı.
+    allow_origins=["*"],
+
+    # Kimlik bilgileri (cookie, token vb.) için True
+    allow_credentials=True,
+
+    # Tüm metodlara (GET, POST, OPTIONS vb.) izin ver
+    allow_methods=["*"],
+
+    # İzin verilen tüm başlıklar.
+    # X-API-Key ve Authorization için bu şart.
+    allow_headers=["*"],
+)
+# --- CORS Bitiş ---
 
 # --- Global Değişkenler ---
 MIN_UNREAD_THRESHOLD = 3 #
