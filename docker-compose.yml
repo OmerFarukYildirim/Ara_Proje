@@ -129,7 +129,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: 12345
       SECRETEJWTSTRING: "ara123456789proje123456789ara123456789proje123456789"
       APP_SECURITY_API_KEY_HEADER: "X-API-KEY"
-      APP_SECURITY_API_KEY_VALUE: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
+      APP_SECURITY_API_KEY_VALUE: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
       AWS_S3_REGION: "eu-north-1"
       AWS_S3_BUCKET: "opt-app-dev"
       AWS_ACCESSKEYID: "AKIA6I7UT46DUIDI7OQ2"
@@ -209,7 +209,7 @@ services:
       KAFKA_BROKERS: "kafka:9092"
       KAFKA_TOPIC_NEWS_REQUEST: "haber_talebi_topic"
       RECOMMENDER_SERVICE_URL: "http://recommender-service:8004"
-      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
+      TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
     networks:
       - ara_proje_network
     depends_on:
@@ -227,7 +227,7 @@ services:
       DATABASE_URL: "postgresql://postgres:12345@postgres_recommender:5432/recommender_db"
       REDIS_ADDR: "redis_cache:6379"
       AUTH_SERVICE_URL: "http://auth-service:8090"
-      TRUSTED_API_KEY: "vGCAHggs623e2dgbGFGfxTRD2561C2CDSANC125csgh"
+      TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
       KAFKA_BROKERS: "kafka:9092"
       KAFKA_TOPIC_ONBOARDING: "onboarding_events"
       KAFKA_TOPIC_INTERACTION: "interaction_events"
