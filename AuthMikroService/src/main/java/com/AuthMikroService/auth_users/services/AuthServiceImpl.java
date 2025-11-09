@@ -17,6 +17,7 @@ import com.AuthMikroService.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final NotificationService notificationService;
+    private final KafkaTemplate<String, NotificationDTO> kafkaTemplate;
 
     // --- DÜZELTİLMİŞ REGISTER METODU ---
     @Override
@@ -44,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 1. Asıl User tablosunda bu email var mı diye kontrol et
         if (userRepository.existsByEmail(registrationRequest.getEmail())) {
-            throw new BadRequestException("This email address is already registered.");
+            throw new BadRequestException("You already registered.");
         }
 
         // 2. Bekleyen bir kayıt var mı diye kontrol et, varsa sil (kodu tekrar gönderme işlevi)
@@ -191,13 +193,18 @@ public class AuthServiceImpl implements AuthService {
 
     // --- YARDIMCI METODLAR ---
     private void sendVerificationEmail(String email, String code, String subject, String body) {
+        log.info("Hazırlanan mail Kafka kuyruğuna bırakılıyor: {}", email);
+
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .recipient(email)
                 .subject(subject)
                 .body(body)
                 .isHtml(false)
                 .build();
-        notificationService.sendEmail(notificationDTO);
+
+        kafkaTemplate.send("notification-events", email, notificationDTO);
+
+        log.info("Mail emri başarıyla Kafka'ya iletildi. Auth servisi işlemine devam ediyor.");
     }
 
     private void validateCode(Verification verification, String code) {
@@ -209,5 +216,31 @@ public class AuthServiceImpl implements AuthService {
             verificationRepository.delete(verification);
             throw new BadRequestException("Verification code has expired. Please try again.");
         }
+    }
+
+    @Override
+    public Response<?> resendVerificationCode(String email) {
+        // 1. Mevcut bekleyen kaydı bul
+        Verification verification = verificationRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Bekleyen doğrulama bulunamadı. Lütfen baştan kayıt olun."));
+
+        // 2. Yeni kod üret
+        Random random = new SecureRandom();
+        String newCode = String.valueOf(1000 + random.nextInt(9000));
+
+        // 3. Mevcut nesneyi güncelle (Şifreye dokunmuyoruz, eski hash kalıyor!)
+        verification.setVerificationCode(newCode);
+        verification.setVerificationCodeExpiry(LocalDateTime.now().plusMinutes(15));
+
+        // 4. Güncellemeyi kaydet
+        verificationRepository.save(verification);
+
+        // 5. Kafka'ya haber ver (Sadece burası aynı)
+        sendVerificationEmail(email, newCode, "Yeni Kodunuz", "Doğrulama kodunuz: " + newCode);
+
+        return Response.builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Kod tekrar gönderildi.")
+                .build();
     }
 }
