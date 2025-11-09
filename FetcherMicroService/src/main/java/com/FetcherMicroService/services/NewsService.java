@@ -119,8 +119,8 @@ public class NewsService {
                 Yanıtın, başka HİÇBİR AÇIKLAMA OLMADAN, doğrudan aşağıdaki JSON formatında olmalıdır.
                 Tüm alanlar dolu olmalı, 'content' alanı en az 100 kelime olmalıdır.
 
-                ÖNEMLİ: 'url' ve 'image_url' alanları için 'example.com' KULLANMA.
-                Bu alanlar için, ürettiğin haberin başlığıyla uyumlu, gerçekçi görünen ama SAHTE (fake) URL adresleri OLUŞTUR.
+                ÇOK ÖNEMLİ: 'url' ve 'image_url' alanları için 'example.com' KULLANMA. Haberi hangi haber sitesinden çektiysen sitedeki o haberin url'sini KESİNLİKLE KULLAN. 'image_url' ise KESİNLİKLE haber ile alakalı bir fotoğraf'a götürmeli.
+                Bu alanlar için, ürettiğin haberi gösteren URL adresleri oluştur.
                 
                 ***ÇOK ÖNEMLİ JSON KURALI:*** Eğer 'title', 'description' veya 'content' alanlarının DEĞERİ içinde çift tırnak işareti (") geçiyorsa, bu tırnak işaretini JSON formatına uygun olarak mutlaka bir ters eğik çizgi (\\) ile kaçış karakteri (escape) kullanarak yazmalısın. Örnek: "Bu bir \"kaçışlı\" metindir."
                 ***Sadece çift tırnak (") için değil başka sorun çıkaracak (JSON parse hatası) yazım şekli olursa onlara da kaçış ekle.

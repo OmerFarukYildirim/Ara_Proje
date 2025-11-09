@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="758bc916-2cdb-4f22-a77b-0d40d0a10479" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
-    </list>
+    <list default="true" id="758bc916-2cdb-4f22-a77b-0d40d0a10479" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +92,7 @@
       <workItem from="1762416103169" duration="1728000" />
       <workItem from="1762437195089" duration="237000" />
       <workItem from="1762641817156" duration="959000" />
-      <workItem from="1762705692663" duration="16000" />
+      <workItem from="1762705692663" duration="614000" />
     </task>
     <servers />
   </component>
