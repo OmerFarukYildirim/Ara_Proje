@@ -101,7 +101,7 @@ services:
     networks:
       - ara_proje_network
     environment:
-      REDIS_PASSWORD: "!ASD1210*DAsad323.21?AZXnu"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     command: redis-server --requirepass ${REDIS_PASSWORD}
 
   elasticsearch:
@@ -227,7 +227,7 @@ services:
       PORT: "8004"
       DATABASE_URL: "postgresql://postgres:12345@postgres_recommender:5432/recommender_db"
       REDIS_ADDR: "redis_cache:6379"
-      REDIS_PASSWORD: "!ASD1210*DAsad323.21?AZXnu"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       AUTH_SERVICE_URL: "http://auth-service:8090"
       TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
       KAFKA_BROKERS: "kafka:9092"
