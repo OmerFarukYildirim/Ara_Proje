@@ -98,10 +98,11 @@ services:
   redis_cache:
     image: redis:7-alpine
     container_name: redis_cache
-    ports:
-      - "6379:6379"
     networks:
       - ara_proje_network
+    environment:
+      REDIS_PASSWORD: "!ASD1210*DAsad323.21?AZXnu"
+    command: redis-server --requirepass ${REDIS_PASSWORD}
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
@@ -226,6 +227,7 @@ services:
       PORT: "8004"
       DATABASE_URL: "postgresql://postgres:12345@postgres_recommender:5432/recommender_db"
       REDIS_ADDR: "redis_cache:6379"
+      REDIS_PASSWORD: "!ASD1210*DAsad323.21?AZXnu"
       AUTH_SERVICE_URL: "http://auth-service:8090"
       TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
       KAFKA_BROKERS: "kafka:9092"

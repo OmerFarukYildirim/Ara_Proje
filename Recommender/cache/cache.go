@@ -14,14 +14,15 @@ var RDB *redis.Client
 // Init, Redis bağlantısını başlatır.
 func Init() {
 	redisAddr := config.Get("REDIS_ADDR")
+	redisPass := config.Get("REDIS_PASSWORD")
 	if redisAddr == "" {
 		log.Fatal("REDIS_ADDR .env dosyasında ayarlanmamış.")
 	}
 
 	RDB = redis.NewClient(&redis.Options{
 		Addr:     redisAddr,
-		Password: "", // Şifren yoksa boş bırak
-		DB:       0,  // Varsayılan 0 nolu veritabanı
+		Password: redisPass,
+		DB:       0, // Varsayılan 0 nolu veritabanı
 	})
 
 	// Bağlantıyı test et
