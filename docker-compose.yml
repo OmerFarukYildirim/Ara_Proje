@@ -171,7 +171,7 @@ services:
       SPRING_KAFKA_CONSUMER_GROUP_ID: fetcher-group
       KAFKA_TOPIC_NEWS_REQUEST: haber_talebi_topic
       KAFKA_TOPIC_NEWS_PROCESSED: haber_zenginlestirme_topic
-      LLM_API_KEY: AIzaSyAXBKULrDW9rTVr68n4NfLU8HjVJNmGYt0
+      LLM_API_KEY: AIzaSyB6zoXCSEWPMuKsCWFLnZK0DDmZwh-gkU8
       LLM_API_BASEURL: https://generativelanguage.googleapis.com
     networks:
       - ara_proje_network
@@ -187,7 +187,7 @@ services:
       Kafka__Broker: kafka:9092
       Kafka__ConsumerTopic: haber_zenginlestirme_topic
       Kafka__ProducerTopic: haber_isleme_topic
-      HuggingFace__ApiKey: "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"
+      HuggingFace__ApiKey: "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"
       HuggingFace__ApiUrl: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
     networks:
       - ara_proje_network
@@ -204,7 +204,7 @@ services:
       KAFKA_TOPIC_CONSUME: haber_isleme_topic
       KAFKA_CONSUMER_GROUP: "ai-enrichment-group"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
-      hf_api_key: "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"
+      hf_api_key: "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"
       
     networks:
       - ara_proje_network
@@ -242,14 +242,12 @@ services:
     build: ./content-mixer # Klasör isminin 'mixer-service' olduğunu varsayıyorum
     container_name: content-mixer-service
     ports:
-      - "8092:8092" # Dışarıya 8082 portundan açtık
+      - "8092:8092"
     environment:
       SERVER_PORT: 8092
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_KAFKA_CONSUMER_GROUP_ID: news-mixer-group
-      # Java kodundaki ${app.kafka.topic.request} buna denk gelir
       APP_KAFKA_TOPIC_REQUEST: unmixed-feed-topic
-      # Java kodundaki ${app.kafka.topic.reply} buna denk gelir
       APP_KAFKA_TOPIC_REPLY: mixed-feed-reply-topic
     networks:
       - ara_proje_network
