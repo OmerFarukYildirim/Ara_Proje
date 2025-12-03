@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/config/KafkaProducerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/RegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/RegistrationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/AuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/notification/dtos/NotificationDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/notification/dtos/NotificationDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/notification/services/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/notification/services/NotificationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
-    </list>
+    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,6 +107,7 @@
       <workItem from="1762642871043" duration="599000" />
       <workItem from="1762705560419" duration="643000" />
       <workItem from="1764596988758" duration="7851000" />
+      <workItem from="1764791190954" duration="247000" />
     </task>
     <servers />
   </component>

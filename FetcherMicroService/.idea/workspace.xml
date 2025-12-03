@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed" />
+    <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
+      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../start.sh" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -107,6 +113,7 @@
       <workItem from="1762626425118" duration="3482000" />
       <workItem from="1762709043603" duration="1456000" />
       <workItem from="1764596981442" duration="11000" />
+      <workItem from="1764792218274" duration="852000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>

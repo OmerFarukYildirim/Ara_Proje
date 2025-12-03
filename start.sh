@@ -148,7 +148,7 @@ echo "--------------------------------------------------------"
 
 
 
-docker compose up -d --build content-finder-service processor-service ai-enrichment-service
+docker compose up -d --build content-finder-service processor-service ai-enrichment-service content-mixer-service
 
 
 echo "Otomasyon servislerinin ilk bağlantısını kurması için 15 saniye bekleniyor..."
