@@ -11,4 +11,5 @@ public interface AuthService {
     Response<LoginResponse> verifyRegistration(VerificationRequest verificationRequest);
     Response<?> login(LoginRequest loginRequest);
     Response<LoginResponse> verifyCodeAndLogin(VerificationRequest verificationRequest);
+    Response<?> resendVerificationCode(String email);
 }

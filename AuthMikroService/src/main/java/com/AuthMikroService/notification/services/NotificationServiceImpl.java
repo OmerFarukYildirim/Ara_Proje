@@ -9,9 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
+import org.springframework.kafka.annotation.KafkaListener;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -24,9 +23,10 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     @Override
-    @Async
-    public void sendEmail(NotificationDTO notificationDTO) {
-        log.info("Inside sendEmail() - ASYNC thread started."); // [1]
+    @KafkaListener(topics = "notification-events", groupId = "notification-group")
+    public void sendEmail(NotificationDTO notificationDTO) { // Metod ismini değiştirebilirsin (opsiyonel)
+
+        log.info("Kafka Listener: Yeni bir mail emri yakalandı -> {}", notificationDTO.getRecipient());
 
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -38,13 +38,12 @@ public class NotificationServiceImpl implements NotificationService {
             helper.setSubject(notificationDTO.getSubject());
             helper.setText(notificationDTO.getBody(), notificationDTO.isHtml());
 
-            log.info("Attempting to send email to {}...", notificationDTO.getRecipient()); // [2]
+            log.info("SMTP Sunucusuna bağlanılıyor: {}...", notificationDTO.getRecipient());
 
-            // --- KİLİTLENME NOKTASI 1 (En Yüksek İhtimal) ---
+            // Maili gönder
             javaMailSender.send(mimeMessage);
-            // ---------------------------------------------
 
-            log.info("Email sent successfully to {}. Attempting to save notification to DB...", notificationDTO.getRecipient()); // [3]
+            log.info("Mail başarıyla gönderildi. Veritabanına loglanıyor...");
 
             Notification notificationToSave = Notification.builder()
                     .recipient(notificationDTO.getRecipient())
@@ -53,16 +52,14 @@ public class NotificationServiceImpl implements NotificationService {
                     .isHtml(notificationDTO.isHtml())
                     .build();
 
-            // --- KİLİTLENME NOKTASI 2 (Düşük İhtimal) ---
             notificationRepository.save(notificationToSave);
-            // ------------------------------------------
 
-            log.info("Saved notification to DB. ASYNC task finished."); // [4]
+            log.info("İşlem tamamlandı. Sıradaki mesaj bekleniyor.");
 
         } catch (Exception e) {
-            // Hata mesajını gizlememek için stack trace'i logla!
-            log.error("Error occurred while sending email: ", e); // [5] BU ÇOK ÖNEMLİ
-            throw new RuntimeException(e.getMessage());
+            log.error("Kafka mesajı işlenirken hata oluştu (Mail Gönderilemedi): ", e);
+            // Burada hata fırlatmazsan Kafka mesajı "işlendi" sayar ve geçer.
+            // Eğer tekrar denemesini istiyorsan exception fırlatmalısın.
         }
     }
 }

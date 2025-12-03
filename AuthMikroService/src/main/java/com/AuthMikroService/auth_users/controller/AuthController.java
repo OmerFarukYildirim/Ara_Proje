@@ -9,10 +9,7 @@ import com.AuthMikroService.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -40,5 +37,10 @@ public class AuthController {
     @PostMapping("/verifyReg")
     public ResponseEntity<Response<LoginResponse>> verifyRegister(@Valid @RequestBody VerificationRequest verificationRequest) {
         return ResponseEntity.ok(authService.verifyRegistration(verificationRequest));
+    }
+
+    @PostMapping("/resend-code")
+    public ResponseEntity<Response<?>> resendCode(@RequestParam("email") String email) {
+        return ResponseEntity.ok(authService.resendVerificationCode(email));
     }
 }

@@ -3,6 +3,7 @@ package com.AuthMikroService.auth_users.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -22,7 +23,10 @@ public class RegistrationRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 3, message = "Password must be at least 3 characters long")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+            message = "Şifre en az 8 karakter olmalı, 1 büyük harf, 1 sayı ve 1 özel karakter içermelidir."
+    )
     private String password;
 
     @NotBlank(message = "Phone number is required")
