@@ -1,0 +1,25 @@
+# Git
+.git/
+.gitignore
+
+# IDE ve OS Dosyaları
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build Çıktıları (EN ÖNEMLİSİ!)
+target/
+build/
+
+# Loglar
+*.log
+logs/
+
+# Maven Wrapper
+.mvn/
+mvnw
+mvnw.cmd

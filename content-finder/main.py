@@ -8,7 +8,8 @@ from config import settings
 from typing import List, Dict, Any, Optional
 import json
 import httpx # YENİ: Recommender'ı çağırmak için
-from aiokafka import AIOKafkaProducer
+from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
+import uuid
 import asyncio
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,11 +44,22 @@ MAX_NEWS_PER_CATEGORY = 5
 TOTAL_FEED_LIMIT = 20
 
 kafka_producer: Optional[AIOKafkaProducer] = None
+kafka_consumer: Optional[AIOKafkaConsumer] = None # YENİ: Cevap dinleyici
+KAFKA_TOPIC_MIXED_REPLY = "mixed-feed-reply-topic"
+KAFKA_TOPIC_UNMIXED_FEED = "unmixed-feed-topic"
+pending_requests: Dict[str, asyncio.Future] = {}   # Cevap bekleyenler
+
 es: Optional[Elasticsearch] = None
 # YENİ: Recommender (Go) servisi için HTTP Client
 recommender_client: Optional[httpx.AsyncClient] = None
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+def safe_decode(value):
+    """Değer byte ise decode eder, değilse olduğu gibi bırakır."""
+    if isinstance(value, bytes):
+        return value.decode('utf-8')
+    return value
 
 async def validate_api_key(api_key: str = Security(api_key_header)):
     """
@@ -61,59 +73,105 @@ async def validate_api_key(api_key: str = Security(api_key_header)):
         )
     return api_key
 
+
+# --- main.py DOSYASINDAKİ consume_replies FONKSİYONU ---
+
+# --- main.py DOSYASINDAKİ consume_replies FONKSİYONU ---
+
+async def consume_replies():
+    """Spring Mixer servisinden dönen cevapları arka planda dinler."""
+    global kafka_consumer
+    
+    async for msg in kafka_consumer:
+        try:
+            # Gelen başlıkları güvenli bir şekilde String'e çevirelim
+            headers = {safe_decode(k): safe_decode(v) for k, v in msg.headers}
+            
+            # Gelen ID'yi String olarak al
+            received_id = headers.get("correlation_id")
+
+            # --- DEBUG LOG BAŞLANGICI ---
+            target_ids = list(pending_requests.keys())
+            print(f"[DEBUG CONSUMER] Topic: {msg.topic}, Received ID: {received_id}, Pending IDs: {target_ids}")
+            # --- DEBUG LOG BİTİŞİ ---
+
+            # Eşleşme kontrolü: received_id'nin tipinden bağımsız olarak kontrol ediyoruz.
+            if received_id and received_id in pending_requests:
+                # Eşleşme tamam!
+                data = json.loads(msg.value.decode('utf-8'))
+                future = pending_requests.pop(received_id)
+                if not future.done():
+                    future.set_result(data)
+                    print(f"[content-finder] MÜKEMMEL: Mixer cevabı alındı ve eşleştirildi. ID: {received_id}")
+            else: 
+                print(f"EŞLEŞMEDİ! Received ID: '{received_id}' (Tip: {type(received_id)}, Uzunluk: {len(received_id or '')})")
+                print(f"Target ID:   '{list(pending_requests.keys())[0]}' (Tip: {type(list(pending_requests.keys())[0])}, Uzunluk: {len(list(pending_requests.keys())[0] or '')})")
+
+        except Exception as e:
+            print(f"Reply dinleme hatası: {e}. Consumer çalışmaya devam ediyor.")
+            continue
+
 # --- BAĞLANTILAR (Clean Code: Startup / Shutdown) ---
 @app.on_event("startup")
 async def startup_event():
-    """Uygulama başladığında dış bağlantıları kurar."""
-    global es, kafka_producer, recommender_client
+    global es, kafka_producer, kafka_consumer, recommender_client
 
-    # 1. Elasticsearch Bağlantısı
     try:
         es = Elasticsearch(settings.elasticsearch_url)
         es.ping()
-        print(f"[content-finder] Elasticsearch'e {settings.elasticsearch_url} adresine bağlandı.")
     except Exception as e:
-        print(f"[content-finder] Elasticsearch bağlantı hatası: {e}")
+        print(f"ES hatası: {e}")
         es = None
 
-    # 2. Kafka Producer (Yayıncı) Bağlantısı
     try:
-        kafka_producer = AIOKafkaProducer(
-            bootstrap_servers=settings.kafka_brokers
-        )
+        kafka_producer = AIOKafkaProducer(bootstrap_servers=settings.kafka_brokers)
         await kafka_producer.start()
-        print(f"[content-finder] Kafka Producer {settings.kafka_brokers} adresine bağlandı.")
     except Exception as e:
-        print(f"[content-finder] Kafka Producer bağlantı hatası: {e}")
+        print(f"Kafka Producer hatası: {e}")
         kafka_producer = None
 
-    # 3. YENİ: Recommender (Go) Client Bağlantısı
+    # YENİ: Mixer'den gelen cevapları dinlemek için Consumer
+    try:
+        kafka_consumer = AIOKafkaConsumer(
+            # TOPIC LİSTESİ YERİNE SADECE BİR KEZ TOPIC VERİYORUZ
+            KAFKA_TOPIC_MIXED_REPLY, 
+            bootstrap_servers=settings.kafka_brokers,
+            group_id="content-finder-reply-group",
+            auto_offset_reset="earliest"
+        )
+        await kafka_consumer.start()
+        
+        # KRİTİK DÜZELTME: Consumer'ın Topic'e abone olduğundan emin olmak için 
+        # AIOKafka'nın özel metodunu kullanıyoruz.
+        topics = {KAFKA_TOPIC_MIXED_REPLY}
+        
+        # Abone olduğu partisyonlar gelene kadar bekler.
+        # Bu, topic'in doğru olduğunu garanti etmenin en güvenli yoludur.
+        while kafka_consumer.assignment() == set():
+             print("[content-finder] Cevap Topic'ine abone olundu, atama bekleniyor...")
+             await asyncio.sleep(0.5)
+
+        print("[content-finder] Mixer Consumer başlatıldı ve Cevap Topic'i dinlemeye hazır.")
+
+        asyncio.create_task(consume_replies())
+    except Exception as e:
+        print(f"Kafka Consumer hatası: {e}")
+        kafka_consumer = None
+
     try:
         recommender_client = httpx.AsyncClient(
             base_url=settings.recommender_service_url,
-            headers={
-                "X-API-Key": settings.trusted_api_key #
-            },
+            headers={"X-API-Key": settings.trusted_api_key},
             timeout=10.0
         )
-        print(f"[content-finder] Recommender-service client'ı {settings.recommender_service_url} için kuruldu.")
-    except Exception as e:
-        print(f"Recommender client hatası: {e}")
+    except:
         recommender_client = None
-
 @app.on_event("shutdown")
 async def shutdown_event():
-    """Uygulama kapandığında bağlantıları kapatır."""
-    if kafka_producer:
-        await kafka_producer.stop()
-        print("[content-finder] Kafka Producer bağlantısı kapatıldı.")
-    if es:
-        es.close()
-        print("[content-finder] Elasticsearch bağlantısı kapatıldı.")
-    if recommender_client:
-        await recommender_client.aclose()
-        print("[content-finder] Recommender-service client'ı kapatıldı.")
-
+    if kafka_producer: await kafka_producer.stop()
+    if kafka_consumer: await kafka_consumer.stop() # YENİ
+    if es: es.close()
+    if recommender_client: await recommender_client.aclose()
 def get_db():
     """PostgreSQL oturum (session) bağımlılığı"""
     db = models.SessionLocal()
@@ -143,18 +201,15 @@ async def send_kafka_request(category: str):
     except Exception as e:
         print(f"[content-finder] Kafka'ya mesaj iletilemedi: {e}")
 
-def get_unread_news_from_es(user_id: str, category: str, db: Session) -> List[Dict[str, Any]]:
-    """Belirli bir kategori için ES'ten okunmamış haberleri çeker"""
-
-    # 1. Postgres'ten (UserReads) okunan haber ID'lerini al
+def get_unread_news_from_es(user_id: str, category: str, db: Session, limit: int) -> List[Dict[str, Any]]:
+    """Parametre olarak gelen 'limit' kadar okunmamış haber çeker."""
     read_news_records = db.query(models.UserReadHistory.news_id).filter(
         models.UserReadHistory.user_id == user_id
     ).all()
     read_news_ids = [record[0] for record in read_news_records]
 
-    # 2. ES Sorgusu: 'must_not' (okunanlar) VE 'filter' (kategori)
     search_body = {
-        "size": MAX_NEWS_PER_CATEGORY, # Her kategoriden en fazla 5 al
+        "size": limit, # ARTIK DİNAMİK (SKORA GÖRE)
         "query": {
             "bool": {
                 "must_not": [{"ids": {"values": read_news_ids}}],
@@ -169,9 +224,8 @@ def get_unread_news_from_es(user_id: str, category: str, db: Session) -> List[Di
         hits = response.get("hits", {}).get("hits", [])
         return [hit["_source"] for hit in hits]
     except Exception as e:
-        print(f"Elasticsearch arama hatası (Kategori: {category}): {e}")
-        return [] # Hata olursa boş liste dön
-
+        print(f"ES hatası: {e}")
+        return []
 # --- API ENDPOINT 1 (Değişiklik yok) ---
 
 # --- Pydantic Modelleri (Değişiklik yok) ---
@@ -203,76 +257,83 @@ def track_read_history(item: ReadHistoryInput, db: Session = Depends(get_db)):
 async def get_personalized_feed(
         user_id: str,
         db: Session = Depends(get_db)
-) -> List[Dict[str, Any]]:
-    """
-    (KORUMALI) Kullanıcının skorlarına göre kişiselleştirilmiş bir 'feed' oluşturur.
-    """
-    """
-    Kullanıcının skorlarına göre kişiselleştirilmiş bir 'feed' oluşturur.
-    1. Recommender'dan (Go) sıralı kategorileri alır.
-    2. Her kategori için ES'ten okunmamış haberleri arar.
-    3. Yetersizse, Kafka'ya (asenkron) talep yollar.
-    4. Bulabildiklerini anında kullanıcıya döner.
-    """
+):
+    if not (es and kafka_producer and recommender_client):
+        raise HTTPException(503, "Servisler hazır değil.")
 
-    if not es or not kafka_producer or not recommender_client:
-        raise HTTPException(503, "Harici servisler (ES, Kafka, Recommender) düzgün başlatılamadı.")
-
-    # --- 1. Adım: Recommender'dan (Go) Sıralı Kategorileri Al ---
+    # 1. Recommender'dan Skorları Al
     try:
         response = await recommender_client.get(f"/api/recommendations/{user_id}")
-        response.raise_for_status() # 4xx/5xx hata varsa
-        data = response.json()
-        ranked_categories = data.get("categories", [])
-        if not ranked_categories:
-            raise HTTPException(404, "Kullanıcı skorları bulunamadı veya boş.")
-        print(f"[content-finder] UserID {user_id} için sıralı kategoriler alındı: {ranked_categories}")
-
-    except httpx.HTTPStatusError as e:
-        if e.response.status_code == 404:
-            raise HTTPException(404, "Kullanıcı skorları (recommender) bulunamadı.")
-        raise HTTPException(503, f"Recommender servisine ulaşılamadı: {e}")
+        response.raise_for_status()
+        # Beklenen Format: [{"category": "spor", "score": 90}, ...]
+        ranked_categories = response.json().get("categories", [])
     except Exception as e:
-        raise HTTPException(500, f"Recommender'dan yanıt işlenemedi: {e}")
+        raise HTTPException(503, f"Recommender hatası: {e}")
 
-    # --- 2. Adım: Kategorileri Döngüye Al ve Haberleri Topla ---
-    final_feed: List[Dict[str, Any]] = []
-
-    # Arka planda çalışacak Kafka taleplerini topla
-    kafka_tasks = []
-
-    # Not: Bu döngü 'sync' (ES ve DB sorguları) çalışır.
-    # FastAPI, 'def' fonksiyonlarını otomatik olarak thread pool'da çalıştırır.
-    for category in ranked_categories:
-        # Toplam haber limitini aştıysak dur
+    final_feed = []
+    
+    # 2. Döngü: Skorlara Göre Dinamik Haber Topla
+    for item in ranked_categories:
+        # Toplam limiti aştıysak dur
         if len(final_feed) >= TOTAL_FEED_LIMIT:
             break
 
-        # 1. Bu kategori için okunmamış haberleri çek
-        unread_news = get_unread_news_from_es(user_id, category, db)
-
-        # 2. Yeterli haber var mı diye bak
-        if len(unread_news) >= MIN_UNREAD_THRESHOLD:
-            print(f"[content-finder] Kategori '{category}' için {len(unread_news)} adet yeterli haber bulundu.")
-            # Limiti aşmayacak kadarını ekle
-            needed = TOTAL_FEED_LIMIT - len(final_feed)
-            final_feed.extend(unread_news[:needed])
+        # --- DÜZELTME BAŞLANGICI ---
+        if isinstance(item, str):
+            category = item
+            score = 80 
         else:
-            # 3. Yeterli haber yoksa, Kafka'ya (asenkron) talep yolla
-            # 'await' KULLANMIYORUZ! Kullanıcıyı bekletmemek için
-            # talebi "ateşle ve unut" (fire-and-forget) yapıyoruz.
-            task = asyncio.create_task(send_kafka_request(category))
-            kafka_tasks.append(task)
+            category = item.get("category")
+            score = item.get("score", 0)
+        # --- DÜZELTME BİTİŞİ ---
 
-            # Elimizdeki az sayıdaki haberi yine de ekle
-            if len(unread_news) > 0:
-                needed = TOTAL_FEED_LIMIT - len(final_feed)
-                final_feed.extend(unread_news[:needed])
+        # Hedeflenen sayı
+        target_count = int(score / 20) + 1 
 
-    # 4. Adım: Bulunanları Kullanıcıya Hemen Dön
+        # ES'ten haber çek
+        unread_news = get_unread_news_from_es(user_id, category, db, limit=target_count)
+
+        # -----------------------------------------------------------
+        # EKSİK OLAN VE GERİ EKLENMESİ GEREKEN KISIM BURASI:
+        # -----------------------------------------------------------
+        
+        # 1. Yeterli haber var mı diye bak (Eski Fetcher Mantığı)
+        if len(unread_news) < target_count:
+            # Yeterli yoksa, Kafka ile Fetcher'ı tetikle (Fire and Forget)
+            print(f"[content-finder] '{category}' için haber eksik ({len(unread_news)}/{target_count}). Fetcher tetikleniyor...")
+            asyncio.create_task(send_kafka_request(category))
+        
+        # 2. Bulduklarımızı ana listeye ekle (Bu satır yoktu, o yüzden liste hep boştu!)
+        final_feed.extend(unread_news)
+
+    # Hiç haber yoksa bekleme mesajı dön
     if not final_feed:
-        # Eğer HİÇ haber bulamadıysak (ve Kafka talepleri yoldaysak)
-        # kullanıcıya "birazdan tekrar dene" mesajı dönmek daha iyi olabilir.
-        raise HTTPException(202, "Feed'iniz oluşturuluyor. Lütfen birkaç dakika sonra tekrar deneyin.")
+        raise HTTPException(202, "Feed oluşturuluyor. Lütfen birazdan tekrar deneyin.")
 
-    return final_feed
+    # --- 4. MIXER İLE KARIŞTIRMA (Kafka Request-Reply) ---
+    correlation_id = str(uuid.uuid4())
+    future = asyncio.get_event_loop().create_future()
+    pending_requests[correlation_id] = future
+
+    payload = {"user_id": user_id, "feed": final_feed}
+
+    try:
+        # A) Mixer'e gönder
+        await kafka_producer.send_and_wait(
+            KAFKA_TOPIC_UNMIXED_FEED,
+            json.dumps(payload).encode("utf-8"),
+            headers=[("correlation_id", correlation_id.encode("utf-8"))]
+        )
+
+        # B) Mixer'den cevabı bekle (5 sn timeout)
+        result = await asyncio.wait_for(future, timeout=3.0)
+        return result.get("feed", [])
+
+    except asyncio.TimeoutError:
+        pending_requests.pop(correlation_id, None)
+        # Mixer cevap vermezse ham listeyi dön (Fallback)
+        print("Mixer cevap vermedi, ham liste dönülüyor.")
+        return final_feed
+    except Exception as e:
+        pending_requests.pop(correlation_id, None)
+        raise HTTPException(500, f"Mixer işlem hatası: {e}")

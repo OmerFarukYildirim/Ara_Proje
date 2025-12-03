@@ -212,6 +212,8 @@ func setupRouter(scoreHandler *handler.ScoreHandler, authMiddleware *middleware.
 		api.POST("/rebuild-cache", scoreHandler.HandleRebuildCache)
 
 		api.GET("/recommendations/:user_id", scoreHandler.HandleGetRecommendations)
+
+		api.POST("/reset-scores", scoreHandler.HandleResetUserScores)
 	}
 
 	// Ping (Sağlık) testi

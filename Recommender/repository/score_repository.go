@@ -189,19 +189,23 @@ func (r *ScoreRepository) GetDistinctUserIDs(ctx context.Context) ([]int64, erro
 	return userIDs, nil
 }
 
-// GetInteractionsForUser, bir kullanıcının TÜM ham etkileşimlerini
-// ZAMAN SIRALI (en eskiden en yeniye) olarak çeker.
-func (r *ScoreRepository) GetInteractionsForUser(ctx context.Context, userID int64) ([]InteractionData, error) {
+// score_repository.go (GetInteractionsForUser fonksiyonunun altına ekleyin)
+
+// GetInteractionsForUserSince, belirli bir zaman noktasından SONRAKİ
+// (created_at > givenTime) TÜM etkileşimleri zaman sıralı olarak çeker.
+func (r *ScoreRepository) GetInteractionsForUserSince(ctx context.Context, userID int64, givenTime time.Time) ([]InteractionData, error) {
+	// Sorgu, event_type ve event_data'yı çeker.
 	query := `
 		SELECT event_type, event_data
 		FROM interaction_events
-		WHERE user_id = $1
+		WHERE user_id = $1 AND created_at > $2
 		ORDER BY created_at ASC
-	` // ASC -> En eskiden en yeniye (Skorlamanın doğru yapılması için şart)
-
-	rows, err := r.db.Query(ctx, query, userID)
+	`
+	// givenTime zero time ise (yani hiç sıfırlama yoksa), created_at > zero time
+	// tüm kayıtları çekecektir, bu da istediğimiz davranıştır.
+	rows, err := r.db.Query(ctx, query, userID, givenTime)
 	if err != nil {
-		return nil, fmt.Errorf("GetInteractionsForUser sorgu hatası: %w", err)
+		return nil, fmt.Errorf("GetInteractionsForUserSince sorgu hatası: %w", err)
 	}
 	defer rows.Close()
 
@@ -231,4 +235,47 @@ func (r *ScoreRepository) GetUserScores(ctx context.Context, userID int64) (map[
 	}
 
 	return scores, nil
+}
+
+
+// LogUserResetEvent, belirli bir kullanıcının skorlarının sıfırlandığına dair bir log kaydı atar.
+func (r *ScoreRepository) LogUserResetEvent(ctx context.Context, userID int64) error {
+	
+	query := `
+		INSERT INTO interaction_events (user_id, event_type, category_name, event_data)
+		VALUES ($1, $2, $3, $4)
+	`
+	
+	// event_data: Sıfırlama işlemine dair bilgi
+	resetData := map[string]string{"message": "User scores reset to 10.0 via API call."}
+	jsonData, _ := json.Marshal(resetData)
+
+	// user_id'ye ait bir 'score_reset' olayı logluyoruz.
+	_, err := r.db.Exec(ctx, query, userID, "score_reset", "system_reset", jsonData)
+	if err != nil {
+		return fmt.Errorf("PostgreSQL sıfırlama loglama hatası: %w", err)
+	}
+	return nil
+}
+
+// GetLastResetTime, belirli bir kullanıcının en son gerçekleşen 'score_reset' olayının zamanını döner.
+func (r *ScoreRepository) GetLastResetTime(ctx context.Context, userID int64) (time.Time, error) { // <-- userID eklendi
+	query := `
+		SELECT created_at
+		FROM interaction_events
+		WHERE user_id = $1 AND event_type = 'score_reset'
+		ORDER BY created_at DESC
+		LIMIT 1
+	`
+	var lastResetTime time.Time
+	
+	// QueryRowContext ile tek bir satır çekeriz
+	err := r.db.QueryRow(ctx, query, userID).Scan(&lastResetTime) // <-- userID kullanılıyor
+	
+	if err != nil {
+		// Hata olsa bile Go'nun zero time'ı döneriz, bu da rebuild'in tüm geçmişi okumasına izin verir.
+		return lastResetTime, nil 
+	}
+	
+	return lastResetTime, nil
 }

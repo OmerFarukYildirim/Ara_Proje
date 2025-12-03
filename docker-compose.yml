@@ -208,7 +208,12 @@ services:
       DATABASE_URL: "postgresql://postgres:12345@postgres_userreads:5432/UserReads"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
       KAFKA_BROKERS: "kafka:9092"
+      # Fetcher için eski topic (KORUNDU)
       KAFKA_TOPIC_NEWS_REQUEST: "haber_talebi_topic"
+      # Mixer için yeni topicler (EKLENDİ)
+      KAFKA_TOPIC_UNMIXED_FEED: "unmixed-feed-topic"
+      KAFKA_TOPIC_MIXED_REPLY: "mixed-feed-reply-topic"
+      
       RECOMMENDER_SERVICE_URL: "http://recommender-service:8004"
       TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
     networks:
@@ -216,6 +221,26 @@ services:
     depends_on:
       - postgres_userreads
       - elasticsearch
+      - kafka
+
+
+  # --- YENİ EKLENEN SERVİS ---
+  content-mixer-service:
+    build: ./content-mixer # Klasör isminin 'mixer-service' olduğunu varsayıyorum
+    container_name: content-mixer-service
+    ports:
+      - "8092:8092" # Dışarıya 8082 portundan açtık
+    environment:
+      SERVER_PORT: 8092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: news-mixer-group
+      # Java kodundaki ${app.kafka.topic.request} buna denk gelir
+      APP_KAFKA_TOPIC_REQUEST: unmixed-feed-topic
+      # Java kodundaki ${app.kafka.topic.reply} buna denk gelir
+      APP_KAFKA_TOPIC_REPLY: mixed-feed-reply-topic
+    networks:
+      - ara_proje_network
+    depends_on:
       - kafka
 
   recommender-service:

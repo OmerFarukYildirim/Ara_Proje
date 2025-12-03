@@ -99,6 +99,7 @@ import (
 	"context"       // Arka plan 'rebuild' işlemi için
 	"encoding/json" // Kafka'ya JSON yollamak için
 	"log"
+	"fmt"
 	"net/http"
 	"recommender/config"  // Topic (kuyruk) isimleri için
 	"recommender/kafka"   // Yeni Kafka Producer
@@ -206,7 +207,6 @@ func (h *ScoreHandler) HandleInteraction(c *gin.Context) {
 }
 
 // --- 3. ENDPOINT: Kurtarma (Doğrudan Service'i Çağırır - YAVAŞ) ---
-// (Bu fonksiyon bir önceki cevaptakiyle %100 aynı)
 func (h *ScoreHandler) HandleRebuildCache(c *gin.Context) {
 	log.Println("Redis kurtarma (Rebuild) isteği alındı...")
 
@@ -246,4 +246,46 @@ func (h *ScoreHandler) HandleGetRecommendations(c *gin.Context) {
 
 	// Başarılı: Python servisine sıralı listeyi dön
 	c.JSON(http.StatusOK, gin.H{"categories": rankedCategories})
+}
+
+
+// --- 5. ENDPOINT: Belirli Kullanıcının Skorlarını Sıfırla ---
+
+// HandleResetUserScores, POST /api/reset-scores isteğini yakalar.
+// User ID'yi context'ten (JWT/Auth Middleware) alır ve o kullanıcının Redis skorlarını sıfırlar.
+func (h *ScoreHandler) HandleResetUserScores(c *gin.Context) {
+    // 1. User ID'yi Context'ten (Middleware'den) al
+    userID, exists := c.Get("userID")
+    if !exists {
+        // Bu, middleware'in çalışmadığı veya JWT'nin decode edilemediği anlamına gelir.
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Kullanıcı kimliği (JWT) doğrulanamadı."})
+        return
+    }
+    
+    // Güvenlik: userID'nin int64 olduğundan emin ol
+    id, ok := userID.(int64)
+    if !ok || id == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz Kullanıcı ID formatı."})
+        return
+    }
+
+    log.Printf("Kullanıcı %d için skor SIFIRLAMA isteği alındı...", id)
+
+    // 2. İşlemi asenkron (arka planda) başlat
+    go func() {
+        ctx := context.Background()
+        // Servis katmanında sadece tek bir kullanıcıyı sıfırlayan yeni fonksiyonu çağırıyoruz.
+        err := h.service.ResetUserScoresToDefault(ctx, id) 
+        
+        if err != nil {
+            log.Printf("KRİTİK HATA: Kullanıcı %d için skor sıfırlama işlemi başarısız: %v", id, err)
+        } else {
+            log.Printf("✅ Kullanıcı %d için skor sıfırlama işlemi başarıyla tamamlandı.", id)
+        }
+    }()
+
+    // 3. Kullanıcıya "işlem başladı" de (202 Accepted)
+    c.JSON(http.StatusAccepted, gin.H{
+        "status": fmt.Sprintf("Kullanıcı %d skorları varsayılan değere sıfırlanıyor (arka planda).", id),
+    })
 }

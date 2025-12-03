@@ -409,19 +409,44 @@ func (s *ScoreService) RebuildAllScores(ctx context.Context) (int, error) {
 // rebuildScoresForUser, bir kullanıcının TÜM geçmişini Postgres'ten okur,
 // skorlarını sıfırdan hesaplar ve tek seferde Redis'e yazar.
 func (s *ScoreService) rebuildScoresForUser(ctx context.Context, userID int64) error {
+
+	// YENİ EK: En son sıfırlama zamanını al
+	// Bu, tüm skorları sıfırlayan sistem olayının zamanıdır.
+	lastResetTime, err := s.repo.GetLastResetTime(ctx, userID)// <-- Artık repo'da var
+	if err != nil {
+		log.Printf("Uyarı: En son sıfırlama zamanı alınamadı, tüm geçmiş hesaplanacak: %v", err)
+		// lastResetTime zero time olarak kalır.
+	}
+
 	// 1. Kullanıcının tüm geçmişini (sıralı) çek
-	events, err := s.repo.GetInteractionsForUser(ctx, userID)
+	// YENİ: Sorguya lastResetTime'ı gönderiyoruz.
+	events, err := s.repo.GetInteractionsForUserSince(ctx, userID, lastResetTime) // <-- Artık repo'da var
 	if err != nil {
 		return fmt.Errorf("kullanıcı (%d) geçmişi okunamadı: %w", userID, err)
 	}
+
+	// 2. Etkileşim yoksa kontrol et
 	if len(events) == 0 {
+		// Eğer sıfırlama olmuş ve o zamandan beri etkileşim yoksa, default skorları uygula.
+		if !lastResetTime.IsZero() {
+			// Hiç etkileşim yoksa, sadece varsayılan skorları Redis'e yazıp çık.
+			defaultScores := &entity.UserScore{UserID: userID}
+			s.applyDefaultScoreLogic(defaultScores) // Yeni yardımcı fonksiyon
+			return s.repo.SetScoresInCache(ctx, defaultScores)
+		}
 		return nil // Etkileşimi yoksa, geç
 	}
 
-	// 2. Skorları sıfırdan hesaplamak için boş bir struct ile başla
+	// 3. Skorları sıfırdan hesaplamak için boş bir struct ile başla
 	currentScores := &entity.UserScore{UserID: userID}
 
-	// 3. Etkileşimleri 'Yeniden Oynat' (Replay)
+	// YENİ EK: Eğer sıfırlama yapıldıysa, başlangıç skorlarını 10.0'dan başlat
+	if !lastResetTime.IsZero() {
+		// Eğer bir sıfırlama kaydı varsa, hesaplamaya 10.0'dan başla
+		s.applyDefaultScoreLogic(currentScores)
+	}
+
+	// 4. Etkileşimleri 'Yeniden Oynat' (Replay)
 	for _, event := range events {
 
 		if event.EventType == "onboarding" {
@@ -444,7 +469,7 @@ func (s *ScoreService) rebuildScoresForUser(ctx context.Context, userID int64) e
 		}
 	}
 
-	// 4. Hesaplanan son skoru Redis'e yaz
+	// 5. Hesaplanan son skoru Redis'e yaz
 	log.Printf("Kullanıcı %d için skorlar yeniden hesaplandı, Redis'e yazılıyor.", userID)
 	return s.repo.SetScoresInCache(ctx, currentScores)
 }
@@ -654,3 +679,50 @@ func (s *ScoreService) callUpdateFirstLogin(ctx context.Context, userID int64, a
 
 	log.Printf("✅ Kullanıcı %d için 'updateFirstLogin' başarıyla çağrıldı.", userID)
 }
+
+// score_service.go (En alttaki yardımcı fonksiyonlara ekleyin)
+// applyDefaultScoreLogic, bir skor struct'ındaki tüm kategori skorlarını
+// DefaultStartScore (10.0) değerine çeker.
+func (s *ScoreService) applyDefaultScoreLogic(scores *entity.UserScore) {
+	v := reflect.ValueOf(scores).Elem()
+	t := v.Type()
+	// 1. Tüm skorları varsayılan (10.0) yap
+	for i := 0; i < v.NumField(); i++ {
+		// Yalnızca float32 tipindeki alanları güncelle
+		if fieldType := t.Field(i).Type; fieldType.Kind() == reflect.Float32 {
+			v.Field(i).SetFloat(float64(DefaultStartScore))
+		}
+	}
+}
+
+// --- YENİ İŞLEV: Belirli Kullanıcı Skorunu Sıfırlama ---
+
+// ResetUserScoresToDefault, sadece belirtilen kullanıcının Redis skorlarını 10.0'a sıfırlar
+// ve bu işlemi loglar.
+func (s *ScoreService) ResetUserScoresToDefault(ctx context.Context, userID int64) error {
+	log.Printf("Kullanıcı %d skorları sıfırlanıyor...", userID)
+
+	// 1. Sıfırlama olayını Postgres'e logla (Bu kullanıcıya ait olarak)
+	err := s.repo.LogUserResetEvent(ctx, userID) // <-- Yeni repo fonksiyonu
+	if err != nil {
+		// Loglayamazsak işlemi durdurmak daha güvenli olabilir
+		return fmt.Errorf("kullanıcı %d sıfırlama olayı loglanamadı: %w", userID, err)
+	}
+
+	// 2. Geçici skor struct'ı oluştur
+	defaultScores := &entity.UserScore{UserID: userID}
+
+	// 3. ÇEKİRDEK MANTIK: Tüm skorları 10.0 yap
+	s.applyDefaultScoreLogic(defaultScores) // Mevcut yardımcı fonksiyon
+
+	// 4. Redis'e yaz
+	if err := s.repo.SetScoresInCache(ctx, defaultScores); err != nil {
+		return fmt.Errorf("kullanıcı %d skoru Redis'e sıfırlanamadı: %w", userID, err)
+	}
+	
+	return nil
+}
+
+// applyDefaultScoreLogic ve rebuildScoresForUser fonksiyonları değişmedi.
+
+
