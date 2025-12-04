@@ -8,4 +8,5 @@ import lombok.Data;
 public class KafkaCategoryRequest {
     // Python'un yolladığı JSON'daki 'category' anahtarıyla eşleşir
     private String category;
+    private int count;
 }

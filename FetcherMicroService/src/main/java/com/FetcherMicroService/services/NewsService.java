@@ -34,11 +34,11 @@ public class NewsService {
     }
 
     // --- BU METOT ARTIK GERÇEK BİR LLM ÇAĞRISI YAPIYOR ---
-    private Mono<NewsResponseDTO> fetchFromLlm(String requestCategory) {
-        System.out.println(">>> Gerçek LLM'e istek hazırlanıyor. Kategori: " + requestCategory);
+    private Mono<NewsResponseDTO> fetchFromLlm(String requestCategory, int count) {
+        System.out.println(">>> Gerçek LLM'e istek hazırlanıyor. Kategori: " + requestCategory + ", Sayı: " + count);
 
         // 1. LLM için Prompt Hazırla
-        String prompt = createLlmPrompt(requestCategory);
+        String prompt = createLlmPrompt(requestCategory, count);
 
         // 2. Gemini İstek (Request) Body'sini Oluştur
         GeminiRequest llmRequest = new GeminiRequest(
@@ -66,6 +66,8 @@ public class NewsService {
                         // JSON'un başındaki ve sonundaki ```json ... ``` kısımlarını temizle
                         jsonText = jsonText.replace("```json", "").replace("```", "").trim();
 
+                        jsonText = jsonText.replace("\\'", "'");
+
                         NewsResponseDTO newsResponse = objectMapper.readValue(jsonText, NewsResponseDTO.class);
                         return Mono.just(newsResponse);
                     } catch (Exception e) {
@@ -78,10 +80,12 @@ public class NewsService {
     }
 
     // --- ANA İŞ MANTIĞI (DEĞİŞİKLİK YOK, SADECE METOT ADI DEĞİŞTİ) ---
-    public Mono<Void> fetchAndProcessNews(String category) {
+    public Mono<Void> fetchAndProcessNews(KafkaCategoryRequest request) {
 
+        String category = request.getCategory();
+        int count = request.getCount();
         // ADIM 1: Mock yerine GERÇEK LLM metodunu çağır
-        Mono<NewsResponseDTO> llmResponseMono = this.fetchFromLlm(category);
+        Mono<NewsResponseDTO> llmResponseMono = this.fetchFromLlm(category, count);
 
         // ADIM 2: Gelen veriyi Kafka'nın bir sonraki topic'ine yolla
         return llmResponseMono
@@ -111,24 +115,26 @@ public class NewsService {
     }
 
     // --- LLM'e Ne İstediğimizi Söyleyen Prompt (JSON KAÇIŞ KURALI EKLENDİ) ---
-    private String createLlmPrompt(String category) {
-        // ArticleDTO'daki alanlar: title, description, content, url, image_url, category
-        // NewsResponseDTO'daki alanlar: status, totalResults, articles
+    private String createLlmPrompt(String category, int count) {
+        // Prompt metni güncellendi: '3 adet' yerine '%d adet' gelecek
         return String.format("""
-                'world' kategorisini görmezden gel ve SADECE '%s' kategorisiyle ilgili 3 adet haber makalesi oluştur.
+                'world' kategorisini görmezden gel ve SADECE '%s' kategorisiyle ilgili %d adet haber makalesi oluştur.
                 Yanıtın, başka HİÇBİR AÇIKLAMA OLMADAN, doğrudan aşağıdaki JSON formatında olmalıdır.
-                Tüm alanlar dolu olmalı, 'content' alanı en az 100 kelime olmalıdır.
+                Tüm alanlar dolu olmalı, 'content' alanı en az 150 kelime olmalıdır.
 
                 ÇOK ÖNEMLİ: 'url' ve 'image_url' alanları için 'example.com' KULLANMA. Haberi hangi haber sitesinden çektiysen sitedeki o haberin url'sini KESİNLİKLE KULLAN. 'image_url' ise KESİNLİKLE haber ile alakalı bir fotoğraf'a götürmeli.
                 Bu alanlar için, ürettiğin haberi gösteren URL adresleri oluştur.
                 
                 ***ÇOK ÖNEMLİ JSON KURALI:*** Eğer 'title', 'description' veya 'content' alanlarının DEĞERİ içinde çift tırnak işareti (") geçiyorsa, bu tırnak işaretini JSON formatına uygun olarak mutlaka bir ters eğik çizgi (\\) ile kaçış karakteri (escape) kullanarak yazmalısın. Örnek: "Bu bir \"kaçışlı\" metindir."
                 ***Sadece çift tırnak (") için değil başka sorun çıkaracak (JSON parse hatası) yazım şekli olursa onlara da kaçış ekle.
+                ***ASLA TEK TIRNAK İŞARETİ (') KULLANMA.*** Metin içinde zorunlu olarak kullanman gerekiyorsa, çift tırnak işareti (") kullan.
+                ***ÇOK ÖNEMLİ KURAL: SENDEN KAÇ TANE HABER İSTEDİYSEM AŞAĞIDAKİ ÖRNEK VERDİĞİM JSON FORMATINDA O KADAR HABERİ BANA DÖNDÜRECEKSİN.
+                *** AŞAĞIDA SANA 3 TANE HABER İSTEDİĞİM DURUMDA DÖNECEĞİN ÖRNEK JSON FORMATINI VERDİM. 4 TANE İSTESEYDİM totalResults = 4 olurdu ve ARTİCLES İÇİNDE 4 TANE HABER OLURDU.
                 
                 ```json
                 {
                   "status": "ok",
-                  "totalResults": 3,
+                  "totalResults": %d,
                   "articles": [
                     {
                       "title": "İlk Haber Başlığı (Örnek \"Alıntı\" İçeriyor)",
@@ -157,6 +163,6 @@ public class NewsService {
                   ]
                 }
                 ```
-                """, category, category, category, category);
+                """, category,count,count, category, category, category);
     }
 }

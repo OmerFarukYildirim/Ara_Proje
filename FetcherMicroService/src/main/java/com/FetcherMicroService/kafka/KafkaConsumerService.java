@@ -23,7 +23,7 @@ public class KafkaConsumerService {
     )
     public void listenToNewsRequests(KafkaCategoryRequest request) {
         String category = request.getCategory();
-
+        int count = request.getCount();
         System.out.println("---------------------------------------------------------");
         System.out.println("Kafka'dan (haber_talebi_topic) istek alındı: " + category);
 
@@ -33,7 +33,7 @@ public class KafkaConsumerService {
         }
 
         // İşi 'NewsService'e pasla (Bu asenkron çalışır)
-        newsService.fetchAndProcessNews(category)
+        newsService.fetchAndProcessNews(request)
                 .doOnSuccess(v -> System.out.println("Haberler işlendi ve Kafka'ya (haber_zenginlestirme_topic) yollandı: " + category))
                 .doOnError(e -> System.err.println("Haber işlenirken hata oluştu: " + e.getMessage()))
                 .subscribe(); // WebFlux (Mono) akışını tetikle

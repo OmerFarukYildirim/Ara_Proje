@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +113,7 @@
       <workItem from="1762709043603" duration="1456000" />
       <workItem from="1764596981442" duration="11000" />
       <workItem from="1764792218274" duration="2335000" />
+      <workItem from="1764839618226" duration="2757000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>
