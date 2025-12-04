@@ -187,7 +187,7 @@ services:
       Kafka__Broker: kafka:9092
       Kafka__ConsumerTopic: haber_zenginlestirme_topic
       Kafka__ProducerTopic: haber_isleme_topic
-      HuggingFace__ApiKey: "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"
+      HuggingFace__ApiKey: "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"
       HuggingFace__ApiUrl: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
     networks:
       - ara_proje_network
@@ -204,7 +204,7 @@ services:
       KAFKA_TOPIC_CONSUME: haber_isleme_topic
       KAFKA_CONSUMER_GROUP: "ai-enrichment-group"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
-      hf_api_key: "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"
+      hf_api_key: "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"
       
     networks:
       - ara_proje_network

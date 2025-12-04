@@ -269,8 +269,8 @@ const (
 
 // YENİ: Sıralama için yardımcı struct
 type rankedCategory struct {
-	Name  string
-	Score float64
+	Name  string  `json:"category"`
+	Score float64 `json:"score"`
 }
 
 // --- Input Modelleri (Aynı) ---
@@ -412,7 +412,7 @@ func (s *ScoreService) rebuildScoresForUser(ctx context.Context, userID int64) e
 
 	// YENİ EK: En son sıfırlama zamanını al
 	// Bu, tüm skorları sıfırlayan sistem olayının zamanıdır.
-	lastResetTime, err := s.repo.GetLastResetTime(ctx, userID)// <-- Artık repo'da var
+	lastResetTime, err := s.repo.GetLastResetTime(ctx, userID) // <-- Artık repo'da var
 	if err != nil {
 		log.Printf("Uyarı: En son sıfırlama zamanı alınamadı, tüm geçmiş hesaplanacak: %v", err)
 		// lastResetTime zero time olarak kalır.
@@ -589,7 +589,7 @@ func (s *ScoreService) setScoreByFieldName(scores *entity.UserScore, fieldName s
 }
 
 // YENİ: GetRankedCategories, skorları alır, sıralar ve kategori listesi döner.
-func (s *ScoreService) GetRankedCategories(ctx context.Context, userID int64) ([]string, error) {
+func (s *ScoreService) GetRankedCategories(ctx context.Context, userID int64) ([]rankedCategory, error) {
 	// 1. Repodan skorları (map[string]string) olarak al
 	rawScores, err := s.repo.GetUserScores(ctx, userID)
 	if err != nil {
@@ -627,7 +627,7 @@ func (s *ScoreService) GetRankedCategories(ctx context.Context, userID int64) ([
 		categoryNames = append(categoryNames, item.Name)
 	}
 
-	return categoryNames, nil
+	return rankedList, nil
 }
 
 // YENİ: Auth servisine ilk girişin tamamlandığını bildiren fonksiyon.
@@ -719,10 +719,8 @@ func (s *ScoreService) ResetUserScoresToDefault(ctx context.Context, userID int6
 	if err := s.repo.SetScoresInCache(ctx, defaultScores); err != nil {
 		return fmt.Errorf("kullanıcı %d skoru Redis'e sıfırlanamadı: %w", userID, err)
 	}
-	
+
 	return nil
 }
 
 // applyDefaultScoreLogic ve rebuildScoresForUser fonksiyonları değişmedi.
-
-

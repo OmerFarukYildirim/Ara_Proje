@@ -98,8 +98,8 @@ package handler
 import (
 	"context"       // Arka plan 'rebuild' işlemi için
 	"encoding/json" // Kafka'ya JSON yollamak için
-	"log"
 	"fmt"
+	"log"
 	"net/http"
 	"recommender/config"  // Topic (kuyruk) isimleri için
 	"recommender/kafka"   // Yeni Kafka Producer
@@ -141,8 +141,8 @@ func (h *ScoreHandler) HandleOnboarding(c *gin.Context) {
 
 	// 🚨 YENİ EKLEME: AuthHeader'ı al ve struct'a ekle
 	authHeader := c.GetHeader("Authorization") // Örn: "Bearer eyJ..."
-	input.AuthHeader = authHeader // Yeni alana kaydet
-	
+	input.AuthHeader = authHeader              // Yeni alana kaydet
+
 	// 3. Son Kontrol: UserID hala 0 ise (ne JSON'dan ne Context'ten gelmediyse) hata ver
 	if input.UserID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Kullanıcı ID (user_id) eksik"})
@@ -248,44 +248,43 @@ func (h *ScoreHandler) HandleGetRecommendations(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"categories": rankedCategories})
 }
 
-
 // --- 5. ENDPOINT: Belirli Kullanıcının Skorlarını Sıfırla ---
 
 // HandleResetUserScores, POST /api/reset-scores isteğini yakalar.
 // User ID'yi context'ten (JWT/Auth Middleware) alır ve o kullanıcının Redis skorlarını sıfırlar.
 func (h *ScoreHandler) HandleResetUserScores(c *gin.Context) {
-    // 1. User ID'yi Context'ten (Middleware'den) al
-    userID, exists := c.Get("userID")
-    if !exists {
-        // Bu, middleware'in çalışmadığı veya JWT'nin decode edilemediği anlamına gelir.
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Kullanıcı kimliği (JWT) doğrulanamadı."})
-        return
-    }
-    
-    // Güvenlik: userID'nin int64 olduğundan emin ol
-    id, ok := userID.(int64)
-    if !ok || id == 0 {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz Kullanıcı ID formatı."})
-        return
-    }
+	// 1. User ID'yi Context'ten (Middleware'den) al
+	userID, exists := c.Get("userID")
+	if !exists {
+		// Bu, middleware'in çalışmadığı veya JWT'nin decode edilemediği anlamına gelir.
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Kullanıcı kimliği (JWT) doğrulanamadı."})
+		return
+	}
 
-    log.Printf("Kullanıcı %d için skor SIFIRLAMA isteği alındı...", id)
+	// Güvenlik: userID'nin int64 olduğundan emin ol
+	id, ok := userID.(int64)
+	if !ok || id == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz Kullanıcı ID formatı."})
+		return
+	}
 
-    // 2. İşlemi asenkron (arka planda) başlat
-    go func() {
-        ctx := context.Background()
-        // Servis katmanında sadece tek bir kullanıcıyı sıfırlayan yeni fonksiyonu çağırıyoruz.
-        err := h.service.ResetUserScoresToDefault(ctx, id) 
-        
-        if err != nil {
-            log.Printf("KRİTİK HATA: Kullanıcı %d için skor sıfırlama işlemi başarısız: %v", id, err)
-        } else {
-            log.Printf("✅ Kullanıcı %d için skor sıfırlama işlemi başarıyla tamamlandı.", id)
-        }
-    }()
+	log.Printf("Kullanıcı %d için skor SIFIRLAMA isteği alındı...", id)
 
-    // 3. Kullanıcıya "işlem başladı" de (202 Accepted)
-    c.JSON(http.StatusAccepted, gin.H{
-        "status": fmt.Sprintf("Kullanıcı %d skorları varsayılan değere sıfırlanıyor (arka planda).", id),
-    })
+	// 2. İşlemi asenkron (arka planda) başlat
+	go func() {
+		ctx := context.Background()
+		// Servis katmanında sadece tek bir kullanıcıyı sıfırlayan yeni fonksiyonu çağırıyoruz.
+		err := h.service.ResetUserScoresToDefault(ctx, id)
+
+		if err != nil {
+			log.Printf("KRİTİK HATA: Kullanıcı %d için skor sıfırlama işlemi başarısız: %v", id, err)
+		} else {
+			log.Printf("✅ Kullanıcı %d için skor sıfırlama işlemi başarıyla tamamlandı.", id)
+		}
+	}()
+
+	// 3. Kullanıcıya "işlem başladı" de (202 Accepted)
+	c.JSON(http.StatusAccepted, gin.H{
+		"status": fmt.Sprintf("Kullanıcı %d skorları varsayılan değere sıfırlanıyor (arka planda).", id),
+	})
 }

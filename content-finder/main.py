@@ -182,7 +182,7 @@ def get_db():
 
 # --- YARDIMCI FONKSİYONLAR ---
 
-async def send_kafka_request(category: str):
+async def send_kafka_request(category: str, required_count: int):
     """Kafka'ya (Asenkron) haber talebi yollar"""
     if not kafka_producer:
         print(f"Hata: Kafka producer hazır değil, '{category}' talebi atlanıyor.")
@@ -190,7 +190,7 @@ async def send_kafka_request(category: str):
 
     print(f"[content-finder] Kategori '{category}' için Kafka'ya talep yollanıyor...")
     try:
-        message = {"category": category}
+        message = {"category": category, "count": required_count}
         message_bytes = json.dumps(message).encode("utf-8")
 
         await kafka_producer.send_and_wait(
@@ -281,7 +281,7 @@ async def get_personalized_feed(
         # --- DÜZELTME BAŞLANGICI ---
         if isinstance(item, str):
             category = item
-            score = 80 
+            score = 20
         else:
             category = item.get("category")
             score = item.get("score", 0)
@@ -301,7 +301,7 @@ async def get_personalized_feed(
         if len(unread_news) < target_count:
             # Yeterli yoksa, Kafka ile Fetcher'ı tetikle (Fire and Forget)
             print(f"[content-finder] '{category}' için haber eksik ({len(unread_news)}/{target_count}). Fetcher tetikleniyor...")
-            asyncio.create_task(send_kafka_request(category))
+            asyncio.create_task(send_kafka_request(category,target_count))
         
         # 2. Bulduklarımızı ana listeye ekle (Bu satır yoktu, o yüzden liste hep boştu!)
         final_feed.extend(unread_news)
