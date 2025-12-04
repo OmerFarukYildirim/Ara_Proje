@@ -38,15 +38,14 @@ public class AuthServiceImpl implements AuthService {
     private final NotificationService notificationService;
     private final KafkaTemplate<String, NotificationDTO> kafkaTemplate;
 
-    // --- DÜZELTİLMİŞ REGISTER METODU ---
     @Override
     @Transactional
     public Response<?> register(RegistrationRequest registrationRequest) {
         log.info("INSIDE register()");
 
         // 1. Asıl User tablosunda bu email var mı diye kontrol et
-        if (userRepository.existsByEmail(registrationRequest.getEmail())) {
-            throw new BadRequestException("You already registered.");
+        if (userRepository.existsByEmail(registrationRequest.getEmail()) || userRepository.existsByPhoneNumber(registrationRequest.getPhoneNumber())) {
+            throw new BadRequestException("Your email or phone number already registered.");
         }
 
         // 2. Bekleyen bir kayıt var mı diye kontrol et, varsa sil (kodu tekrar gönderme işlevi)
