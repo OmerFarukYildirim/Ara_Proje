@@ -4,7 +4,9 @@ import com.FetcherMicroService.dtos.KafkaCategoryRequest;
 import com.FetcherMicroService.services.NewsService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
 public class NewsScheduler {
 
     private final NewsService newsService;
-    
+
     private static final List<String> CATEGORIES = Arrays.asList(
             "technology",
             "sports",
@@ -53,24 +55,26 @@ public class NewsScheduler {
      */
     @Scheduled(cron = "0 0 * * * *") // 💡 HER SAAT BAŞI ÇALIŞTIR
     public void generateNewsByCategories() {
-        System.out.println(">>> ZAMANLANMIŞ GÖREV BAŞLADI: Her kategoriden " + COUNT_PER_CATEGORY + " haber üretiliyor.");
+        System.out.println(">>> ZAMANLANMIŞ GÖREV BAŞLADI...");
 
-        // Kategoriler üzerinde döngü yap ve her kategori için haber çekme işlemini başlat
-        CATEGORIES.forEach(category -> {
-            KafkaCategoryRequest request = new KafkaCategoryRequest(category, COUNT_PER_CATEGORY);
+        // 💡 DEĞİŞİKLİK BURADA: forEach yerine Flux kullanıyoruz.
+        // delayElements(Duration.ofSeconds(10)) -> Her kategori isteği arasında 10 saniye bekler.
+        // Bu sayede dakikada 6 istek atarız, 429 hatası yemeyiz.
 
-            System.out.println("   -> Başlatılıyor: Kategori: " + category + ", Sayı: " + COUNT_PER_CATEGORY);
+        Flux.fromIterable(CATEGORIES)
+                .delayElements(Duration.ofSeconds(15)) // 👈 KRİTİK NOKTA: Her istek arası 10 sn mola
+                .flatMap(category -> {
+                    System.out.println("   -> Sıradaki Kategori İşleniyor: " + category);
+                    KafkaCategoryRequest request = new KafkaCategoryRequest(category, COUNT_PER_CATEGORY);
 
-            // NewsService'deki fonksiyonun Mono<Void> döndürdüğünü ve
-            // sadece abone olunduğunda çalıştığını unutma!
-            // Scheduler metodu Mono'yu bloke etmeden (blocking olmadan) çalışsın diye
-            // basitçe abone oluyoruz.
-            this.newsService.fetchAndProcessNews(request)
-                    .doOnSuccess(v -> System.out.println("   -> BAŞARILI: Kategori: " + category))
-                    .doOnError(error -> System.err.println("   -> HATA: Kategori: " + category + ". Hata: " + error.getMessage()))
-                    .subscribe(); // Mono'yu çalıştırmak için subscribe olmak zorunludur.
-        });
-
-        System.out.println(">>> ZAMANLANMIŞ GÖREV BİTTİ (Asenkron haber çekme başlatıldı).");
+                    return newsService.fetchAndProcessNews(request)
+                            .doOnSuccess(v -> System.out.println("   -> BAŞARILI: " + category))
+                            .doOnError(e -> System.err.println("   -> HATA: " + category + " - " + e.getMessage()));
+                })
+                .subscribe( // Akışı başlat
+                        null,
+                        error -> System.err.println("Scheduler Akış Hatası: " + error.getMessage()),
+                        () -> System.out.println(">>> ZAMANLANMIŞ GÖREV (Tüm Kategoriler) TAMAMLANDI.")
+                );
     }
 }

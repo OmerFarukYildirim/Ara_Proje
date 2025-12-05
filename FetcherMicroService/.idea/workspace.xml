@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/FetcherMicroServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/FetcherMicroServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ai-enrichment/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +113,8 @@
       <workItem from="1764596981442" duration="11000" />
       <workItem from="1764792218274" duration="2335000" />
       <workItem from="1764839618226" duration="2758000" />
-      <workItem from="1764910974638" duration="920000" />
+      <workItem from="1764910974638" duration="1107000" />
+      <workItem from="1764933031499" duration="470000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>
