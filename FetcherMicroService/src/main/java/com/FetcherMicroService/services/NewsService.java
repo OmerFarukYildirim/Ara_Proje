@@ -113,7 +113,7 @@ public class NewsService {
                 .doOnError(error -> System.err.println("Haber işleme hatası: " + error.getMessage()))
                 .then(); // Mono<Void> döndür
     }
-    
+
     private String createLlmPrompt(String category, int count) {
         // Prompt metni güncellendi: '3 adet' yerine '%d adet' gelecek
         return String.format("""
@@ -122,9 +122,11 @@ public class NewsService {
                 Tüm alanlar dolu olmalı, 'content' alanı en az 150 kelime olmalıdır.
 
                 
-                ***ÇOK ÖNEMLİ KESİNLİKLE ÇİĞNEMEMEN GEREKEN JSON KURALI:*** Eğer 'title', 'description' veya 'content' alanlarının DEĞERİ içinde çift tırnak işareti (") geçiyorsa, bu tırnak işaretini JSON formatına uygun olarak mutlaka bir ters eğik çizgi (\\) ile kaçış karakteri (escape) kullanarak yazmalısın. Örnek: "Bu bir \"kaçışlı\" metindir."
-                ***Sadece çift tırnak (") için değil başka sorun çıkaracak (JSON parse hatası) yazım şekli olursa onlara da kaçış ekle VEYA HİÇ KULLANMA.
-                ***ASLA TEK TIRNAK İŞARETİ (') KULLANMA.*** Metin içinde zorunlu olarak kullanman gerekiyorsa, çift tırnak işareti (") kullan.
+                ***JSON FORMATI İÇİN HAYATİ KURALLAR:***
+                1. JSON yapısını bozan karakterler kullanma.
+                2. "title", "description" ve "content" alanlarının İÇERİĞİNDE **ASLA ÇİFT TIRNAK (") İŞARETİ KULLANMA.**
+                3. Eğer bir şeyi vurgulaman veya alıntı yapman gerekiyorsa, **SADECE TEK TIRNAK (') KULLAN.** (Örnek: "Ali 'geliyorum' dedi" -> DOĞRU. "Ali "geliyorum" dedi" -> YANLIŞ/YASAK).
+                4. Yanıtın saf bir JSON olmalı, başında ```json veya sonunda ``` olmamalı (varsa da kodum siliyor ama sen yine de koyma).
                 ***ÇOK ÖNEMLİ KURAL: SENDEN KAÇ TANE HABER İSTEDİYSEM AŞAĞIDAKİ ÖRNEK VERDİĞİM JSON FORMATINDA O KADAR HABERİ BANA DÖNDÜRECEKSİN.
                 *** AŞAĞIDA SANA 3 TANE HABER İSTEDİĞİM DURUMDA DÖNECEĞİN ÖRNEK JSON FORMATINI VERDİM. 4 TANE İSTESEYDİM totalResults = 4 olurdu ve ARTİCLES İÇİNDE 4 TANE HABER OLURDU.
                 
