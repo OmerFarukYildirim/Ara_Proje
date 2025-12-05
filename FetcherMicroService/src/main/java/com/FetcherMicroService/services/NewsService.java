@@ -113,8 +113,7 @@ public class NewsService {
                 .doOnError(error -> System.err.println("Haber işleme hatası: " + error.getMessage()))
                 .then(); // Mono<Void> döndür
     }
-
-    // --- LLM'e Ne İstediğimizi Söyleyen Prompt (JSON KAÇIŞ KURALI EKLENDİ) ---
+    
     private String createLlmPrompt(String category, int count) {
         // Prompt metni güncellendi: '3 adet' yerine '%d adet' gelecek
         return String.format("""
@@ -122,11 +121,9 @@ public class NewsService {
                 Yanıtın, başka HİÇBİR AÇIKLAMA OLMADAN, doğrudan aşağıdaki JSON formatında olmalıdır.
                 Tüm alanlar dolu olmalı, 'content' alanı en az 150 kelime olmalıdır.
 
-                ÇOK ÖNEMLİ: 'url' ve 'image_url' alanları için 'example.com' KULLANMA. Haberi hangi haber sitesinden çektiysen sitedeki o haberin url'sini KESİNLİKLE KULLAN. 'image_url' ise KESİNLİKLE haber ile alakalı bir fotoğraf'a götürmeli.
-                Bu alanlar için, ürettiğin haberi gösteren URL adresleri oluştur.
                 
-                ***ÇOK ÖNEMLİ JSON KURALI:*** Eğer 'title', 'description' veya 'content' alanlarının DEĞERİ içinde çift tırnak işareti (") geçiyorsa, bu tırnak işaretini JSON formatına uygun olarak mutlaka bir ters eğik çizgi (\\) ile kaçış karakteri (escape) kullanarak yazmalısın. Örnek: "Bu bir \"kaçışlı\" metindir."
-                ***Sadece çift tırnak (") için değil başka sorun çıkaracak (JSON parse hatası) yazım şekli olursa onlara da kaçış ekle.
+                ***ÇOK ÖNEMLİ KESİNLİKLE ÇİĞNEMEMEN GEREKEN JSON KURALI:*** Eğer 'title', 'description' veya 'content' alanlarının DEĞERİ içinde çift tırnak işareti (") geçiyorsa, bu tırnak işaretini JSON formatına uygun olarak mutlaka bir ters eğik çizgi (\\) ile kaçış karakteri (escape) kullanarak yazmalısın. Örnek: "Bu bir \"kaçışlı\" metindir."
+                ***Sadece çift tırnak (") için değil başka sorun çıkaracak (JSON parse hatası) yazım şekli olursa onlara da kaçış ekle VEYA HİÇ KULLANMA.
                 ***ASLA TEK TIRNAK İŞARETİ (') KULLANMA.*** Metin içinde zorunlu olarak kullanman gerekiyorsa, çift tırnak işareti (") kullan.
                 ***ÇOK ÖNEMLİ KURAL: SENDEN KAÇ TANE HABER İSTEDİYSEM AŞAĞIDAKİ ÖRNEK VERDİĞİM JSON FORMATINDA O KADAR HABERİ BANA DÖNDÜRECEKSİN.
                 *** AŞAĞIDA SANA 3 TANE HABER İSTEDİĞİM DURUMDA DÖNECEĞİN ÖRNEK JSON FORMATINI VERDİM. 4 TANE İSTESEYDİM totalResults = 4 olurdu ve ARTİCLES İÇİNDE 4 TANE HABER OLURDU.
