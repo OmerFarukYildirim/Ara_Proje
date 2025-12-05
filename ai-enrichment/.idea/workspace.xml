@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1691d67d-497d-4ecd-8fcf-24124eced44d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/handler/score_handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Recommender/service/score_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Recommender/service/score_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-mixer/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../content-mixer/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +97,7 @@
       <workItem from="1762415481679" duration="1207000" />
       <workItem from="1762437436550" duration="1370000" />
       <workItem from="1762511291977" duration="3732000" />
-      <workItem from="1764845519372" duration="535000" />
+      <workItem from="1764845519372" duration="1944000" />
     </task>
     <servers />
   </component>
