@@ -25,7 +25,7 @@ public class KafkaConsumerService {
         String category = request.getCategory();
         int count = request.getCount();
         System.out.println("---------------------------------------------------------");
-        System.out.println("Kafka'dan (haber_talebi_topic) istek alındı: " + category);
+        System.out.println("Kafka'dan (haber_talebi_topic) istek alındı: " + category + "Sayı: " + count);
 
         if (category == null || category.isEmpty()) {
             System.err.println("Geçersiz kategori alındı.");
@@ -34,7 +34,7 @@ public class KafkaConsumerService {
 
         // İşi 'NewsService'e pasla (Bu asenkron çalışır)
         newsService.fetchAndProcessNews(request)
-                .doOnSuccess(v -> System.out.println("Haberler işlendi ve Kafka'ya (haber_zenginlestirme_topic) yollandı: " + category))
+                .doOnSuccess(v -> System.out.println("Haberler işlendi ve Kafka'ya " + count + "tane haber (haber_zenginlestirme_topic) yollandı: " + category))
                 .doOnError(e -> System.err.println("Haber işlenirken hata oluştu: " + e.getMessage()))
                 .subscribe(); // WebFlux (Mono) akışını tetikle
     }
