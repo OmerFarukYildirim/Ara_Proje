@@ -59,8 +59,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: authmicroservicedb
-    ports:
-      - "5430:5432"
     networks:
       - ara_proje_network
     volumes:
@@ -73,8 +71,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: recommender_db
-    ports:
-      - "5433:5432"
     networks:
       - ara_proje_network
     volumes:
@@ -87,8 +83,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: UserReads
-    ports:
-      - "5434:5432"
     networks:
       - ara_proje_network
     volumes:
