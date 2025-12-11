@@ -22,7 +22,7 @@ app.add_middleware(
     CORSMiddleware,
     # React uygulamasının adresini yazmalısın. Test için "*" (hepsi)
     # production'da "http://localhost:3000" veya "https://seninsiten.com" gibi olmalı.
-    allow_origins=["*"],
+    allow_origins=["http://192.168.73.206:5173"],
 
     # Kimlik bilgileri (cookie, token vb.) için True
     allow_credentials=True,
