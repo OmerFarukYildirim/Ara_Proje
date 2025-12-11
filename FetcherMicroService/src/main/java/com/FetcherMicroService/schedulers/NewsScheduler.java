@@ -28,7 +28,7 @@ public class NewsScheduler {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Scheduled(cron = "0 0 * * * *") // Her saat başı
+    /*@Scheduled(cron = "0 0 * * * *") // Her saat başı
     public void generateNewsByCategories() {
         System.out.println(">>> SCHEDULER TETİKLENDİ: Tüm kategoriler için Kafka'ya talep bırakılıyor...");
 
@@ -41,5 +41,5 @@ public class NewsScheduler {
         });
 
         System.out.println(">>> SCHEDULER BİTTİ (Talepler Kafka'ya iletildi, gerisi Consumer'da).");
-    }
+    }*/
 }
