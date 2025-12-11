@@ -13,6 +13,7 @@ import uuid
 import asyncio
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request
 
 app = FastAPI()
 
@@ -61,16 +62,35 @@ def safe_decode(value):
         return value.decode('utf-8')
     return value
 
-async def validate_api_key(api_key: str = Security(api_key_header)):
+async def validate_api_key(request: Request, api_key: str = Security(api_key_header)):
     """
-    Gelen isteğin header'ındaki 'X-API-Key'i .env'deki
-    'TRUSTED_API_KEY' ile karşılaştıran güvenlik bağımlılığı.
+    DEBUG MODU: Gelen tüm başlıkları ve karşılaştırma sonucunu terminale basar.
     """
-    if not api_key or api_key != settings.trusted_api_key:
-        raise HTTPException(
-            status_code=401,
-            detail="Geçersiz veya eksik API Key"
-        )
+    # 1. Gelen Headerları Yazdır
+    print("\n--- [DEBUG: AUTH KONTROLÜ] ---")
+    print(f"Gelen URL: {request.url}")
+    print(f"Gelen Method: {request.method}")
+    print("TÜM HEADERLAR:")
+    for key, value in request.headers.items():
+        print(f"  - {key}: {value}")
+
+    # 2. API Key Durumunu Yazdır
+    print(f"Backend'in Beklediği Key (.env): {settings.trusted_api_key}")
+    print(f"Frontend'den Gelen Key (Header): {api_key}")
+
+    # 3. Kontrol
+    if not api_key:
+        print("❌ HATA: API Key hiç gelmedi (None). Tarayıcı veya Proxy silmiş.")
+        raise HTTPException(status_code=401, detail="API Key Eksik (Server tarafına ulaşmadı)")
+
+    if api_key != settings.trusted_api_key:
+        print("❌ HATA: API Key geldi ama YANLIŞ. (.env ile uyuşmuyor)")
+        print(f"  -> Gelen uzunluk: {len(api_key)}")
+        print(f"  -> Beklenen uzunluk: {len(settings.trusted_api_key)}")
+        raise HTTPException(status_code=401, detail="Geçersiz API Key")
+
+    print("✅ BAŞARILI: API Key doğrulandı.")
+    print("------------------------------\n")
     return api_key
 
 
