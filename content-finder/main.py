@@ -25,7 +25,7 @@ app.add_middleware(
     allow_origins=["*"],
 
     # Kimlik bilgileri (cookie, token vb.) için True
-    allow_credentials=True,
+    allow_credentials=False,
 
     # Tüm metodlara (GET, POST, OPTIONS vb.) izin ver
     allow_methods=["*"],
