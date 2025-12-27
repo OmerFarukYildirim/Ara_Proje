@@ -42,7 +42,7 @@ MIN_UNREAD_THRESHOLD = 3 #
 # YENİ: Her kategoriden en fazla kaç haber getirelim?
 MAX_NEWS_PER_CATEGORY = 5
 # YENİ: Kullanıcıya en fazla kaç haber gösterelim (Paging için temel)
-TOTAL_FEED_LIMIT = 20
+TOTAL_FEED_LIMIT = 80
 
 kafka_producer: Optional[AIOKafkaProducer] = None
 kafka_consumer: Optional[AIOKafkaConsumer] = None # YENİ: Cevap dinleyici
@@ -93,8 +93,6 @@ async def validate_api_key(request: Request, api_key: str = Security(api_key_hea
     print("------------------------------\n")
     return api_key
 
-
-# --- main.py DOSYASINDAKİ consume_replies FONKSİYONU ---
 
 # --- main.py DOSYASINDAKİ consume_replies FONKSİYONU ---
 
