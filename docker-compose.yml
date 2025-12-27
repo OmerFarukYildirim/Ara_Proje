@@ -220,7 +220,7 @@ services:
       # Mixer için yeni topicler (EKLENDİ)
       KAFKA_TOPIC_UNMIXED_FEED: "unmixed-feed-topic"
       KAFKA_TOPIC_MIXED_REPLY: "mixed-feed-reply-topic"
-      
+      NEWSDATA_API_KEY: ${NEWSDATA_API_KEY}
       RECOMMENDER_SERVICE_URL: "http://recommender-service:8004"
       TRUSTED_API_KEY: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
     networks:

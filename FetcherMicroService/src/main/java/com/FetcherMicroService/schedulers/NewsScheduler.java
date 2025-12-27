@@ -1,8 +1,6 @@
 package com.FetcherMicroService.schedulers;
 
-import com.FetcherMicroService.dtos.KafkaCategoryRequest;
 import org.springframework.kafka.core.KafkaTemplate; // 💡 NewsService yerine KafkaTemplate
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

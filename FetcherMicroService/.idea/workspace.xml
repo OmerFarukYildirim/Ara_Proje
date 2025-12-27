@@ -6,10 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
       <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/dtos/RegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/dtos/RegistrationRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/apiconfig/KafkaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/apiconfig/KafkaConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../content-finder/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../content-finder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +128,7 @@
       <workItem from="1764936976706" duration="2982000" />
       <workItem from="1766779638952" duration="670000" />
       <workItem from="1766845572928" duration="598000" />
-      <workItem from="1766846903232" duration="479000" />
+      <workItem from="1766846903232" duration="5382000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>
