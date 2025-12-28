@@ -643,7 +643,7 @@ def get_user_read_history(
         }
 
         # Index ismini kendi index isminle değiştirmelisin (örn: "news_tr")
-        es_response = es.search(index="news_tr", body=es_query, size=len(news_ids))
+        es_response = es.search(index="news_articles", body=es_query, size=len(news_ids))
 
         # 3. ADIM: ES sonuçlarını hızlı erişim için bir sözlüğe (Map) çevir
         # Format: {'news_123': 'Haber Başlığı A', 'news_456': 'Haber Başlığı B'}
