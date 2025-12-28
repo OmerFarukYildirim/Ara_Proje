@@ -7,16 +7,8 @@
     <list default="true" id="758bc916-2cdb-4f22-a77b-0d40d0a10479" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +102,7 @@
       <workItem from="1765480249725" duration="3642000" />
       <workItem from="1766845602820" duration="1010000" />
       <workItem from="1766846938211" duration="9687000" />
+      <workItem from="1766907664188" duration="649000" />
     </task>
     <servers />
   </component>

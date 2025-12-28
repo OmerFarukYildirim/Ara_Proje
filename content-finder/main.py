@@ -59,8 +59,8 @@ scheduler = AsyncIOScheduler()
 
 # Otomatik taranacak kategoriler listesi
 AUTO_SCAN_CATEGORIES = [
-    "technology", "sports", "science", "travel", "health",
-    "business", "entertainment", "game", "politics"
+    "technology", "sports", "science", "health",
+    "business", "entertainment", "politics","crime","education","environment","food","lifestyle","tourism"
 ]
 
 es: Optional[Elasticsearch] = None
