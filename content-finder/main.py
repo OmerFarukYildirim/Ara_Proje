@@ -18,6 +18,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Request
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
 
 app = FastAPI()
 
@@ -62,6 +65,10 @@ AUTO_SCAN_CATEGORIES = [
     "technology", "sports", "science", "health",
     "business", "entertainment", "politics","crime","education","environment","food","lifestyle","tourism"
 ]
+
+class ReadHistoryItem(BaseModel):
+    news_id: str
+    title: str
 
 es: Optional[Elasticsearch] = None
 # YENİ: Recommender (Go) servisi için HTTP Client
@@ -602,33 +609,65 @@ async def get_personalized_feed(
         raise HTTPException(500, f"Mixer işlem hatası: {e}")
 
 
-# --- main.py İÇİNE EKLE ---
-
-@app.get("/api/user/read-history", response_model=List[str])
+@app.get("/api/user/read-history", response_model=List[ReadHistoryItem])
 def get_user_read_history(
-        user_id: str = Depends(get_current_user_id), # Token'dan user_id gelir
+        user_id: str = Depends(get_current_user_id),
         db: Session = Depends(get_db)
 ):
     """
-    Kullanıcının daha önce okuduğu haberlerin ID listesini döner.
-    Girdi: Header'da Bearer Token
-    Çıktı: ["news_123", "news_456", ...]
+    Kullanıcının okuma geçmişini (ID + Başlık) döner.
+    1. SQL'den ID'leri çeker.
+    2. Elasticsearch'ten bu ID'lerin başlıklarını topluca alır.
     """
     try:
-        # SQLAlchemy ile sorgu: Sadece news_id kolonunu çekiyoruz
+        # 1. ADIM: SQL'den okunan haber ID'lerini çek
         history_records = db.query(models.UserReadHistory.news_id) \
             .filter(models.UserReadHistory.user_id == user_id) \
             .all()
 
-        # Tuple listesini düz listeye çevir: [('id1',), ('id2',)] -> ['id1', 'id2']
+        if not history_records:
+            return []
+
+        # [('id1',), ('id2',)] -> ['id1', 'id2']
         news_ids = [record[0] for record in history_records]
-        return news_ids
+
+        # 2. ADIM: Elasticsearch'ten başlıkları topluca (Batch) çek
+        # Tek tek sormak yerine "ids" query kullanıyoruz.
+        es_query = {
+            "query": {
+                "ids": {
+                    "values": news_ids
+                }
+            },
+            "_source": ["title"]  # Sadece title alanını istiyoruz, trafiği azaltır
+        }
+
+        # Index ismini kendi index isminle değiştirmelisin (örn: "news_tr")
+        es_response = es.search(index="news_tr", body=es_query, size=len(news_ids))
+
+        # 3. ADIM: ES sonuçlarını hızlı erişim için bir sözlüğe (Map) çevir
+        # Format: {'news_123': 'Haber Başlığı A', 'news_456': 'Haber Başlığı B'}
+        es_data_map = {}
+        for hit in es_response['hits']['hits']:
+            # _source içinde title yoksa 'Başlık Bulunamadı' yazsın
+            es_data_map[hit['_id']] = hit['_source'].get('title', 'Başlık Bulunamadı')
+
+        # 4. ADIM: SQL sıralamasını koruyarak listeyi oluştur
+        response_list = []
+        for nid in news_ids:
+            # SQL'de var ama ES'te silinmiş olabilir, kontrol ediyoruz
+            title = es_data_map.get(nid, "Bu haber artık mevcut değil")
+
+            response_list.append(
+                ReadHistoryItem(news_id=nid, title=title)
+            )
+
+        return response_list
 
     except Exception as e:
         print(f"History Fetch Hatası: {e}")
-        raise HTTPException(status_code=500, detail="Okuma geçmişi alınamadı.")
-
-    # --- main.py İÇİNE EKLE/GÜNCELLE ---
+        # Hata detayını production'da gizlemek istersen sadece "Okuma geçmişi alınamadı" dön
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/news/detail/{news_id}")
 def get_single_news_detail(
