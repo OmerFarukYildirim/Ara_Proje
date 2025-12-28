@@ -148,6 +148,21 @@ public class NewsService {
 
                         if (newsResponse.getArticles() != null) {
                             newsResponse.getArticles().forEach(article -> {
+
+                                // --- YENİ EKLENEN FİLTRELEME MANTIĞI ---
+                                // Eğer LLM içerik bulamazsa prompttaki örnekleri ("Haber Başlığı", "Detaylı içerik") dönebilir.
+                                // Veya başlık boş gelebilir. Bunları eliyoruz.
+                                if (article.getTitle() == null ||
+                                        article.getTitle().isEmpty() ||
+                                        "Haber Başlığı".equalsIgnoreCase(article.getTitle()) ||
+                                        "Detaylı içerik".equalsIgnoreCase(article.getContent()) ||
+                                        "Kısa özet".equalsIgnoreCase(article.getDescription())) {
+
+                                    System.err.println(">>> [İPTAL] Kalitesiz/Placeholder içerik. Kafka'ya gönderilmiyor. URL: " + targetUrl);
+                                    return; // Bu haberi atla, döngüdeki sıradakine geç
+                                }
+                                // ---------------------------------------
+
                                 article.setCategory(category); // Kategoriyi garantiye al
 
                                 // Orijinal resim URL'ini koru (LLM bazen değiştirebilir veya boş bırakabilir)

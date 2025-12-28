@@ -1,5 +1,6 @@
 package com.AuthMikroService.auth_users.services;
 
+import com.AuthMikroService.auth_users.dtos.FormDTO;
 import com.AuthMikroService.auth_users.dtos.UserDTO;
 import com.AuthMikroService.auth_users.entity.User;
 import com.AuthMikroService.response.Response;
@@ -22,6 +23,9 @@ public interface UserService {
     Response<UserDTO> getUserProfileById(Long id);
 
     Response<UserDTO> updateIsFirstLogin();
+
+    Response<?> createForm(FormDTO formDTO);
+    Response<List<FormDTO>> getAllForms();
 
 
 }

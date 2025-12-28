@@ -1,7 +1,10 @@
 package com.AuthMikroService.auth_users.services;
 
+import com.AuthMikroService.auth_users.dtos.FormDTO;
 import com.AuthMikroService.auth_users.dtos.UserDTO;
+import com.AuthMikroService.auth_users.entity.Form;
 import com.AuthMikroService.auth_users.entity.User;
+import com.AuthMikroService.auth_users.repository.FormRepository;
 import com.AuthMikroService.auth_users.repository.UserRepository;
 import com.AuthMikroService.aws.AWSS3Service;
 import com.AuthMikroService.exceptions.BadRequestException;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final FormRepository formRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final AWSS3Service awss3Service;
@@ -201,6 +206,46 @@ public class UserServiceImpl implements UserService {
                 .statusCode(HttpStatus.OK.value())
                 .message("first login making false successfully")
                 .data(userDTO)
+                .build();
+    }
+
+    @Override
+    public Response<?> createForm(FormDTO formDTO) {
+
+        if(formRepository.countByEmail(formDTO.getEmail())<3){
+            Form newForm = Form.builder()
+                    .email(formDTO.getEmail())
+                    .phoneNumber(formDTO.getPhoneNumber())
+                    .topic(formDTO.getTopic())
+                    .content(formDTO.getContent())
+                    .build();
+
+            formRepository.save(newForm);
+
+            return Response.builder()
+                    .statusCode(HttpStatus.OK.value())
+                    .message("Form created successfully")
+                    .build();
+        }else{
+            return Response.builder()
+                    .statusCode(HttpStatus.OK.value())
+                    .message("You can send max 3 form")
+                    .build();
+        }
+    }
+
+    @Override
+    public Response<List<FormDTO>> getAllForms() {
+        List<Form> forms = formRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+
+        List<FormDTO> formDTOS = forms.stream()
+                .map(form -> modelMapper.map(form, FormDTO.class))
+                .collect(Collectors.toList());
+
+        return Response.<List<FormDTO>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("You can send max 3 form")
+                .data(formDTOS)
                 .build();
     }
 

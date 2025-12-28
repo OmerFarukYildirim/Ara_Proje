@@ -6,18 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AWSS3ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AWSS3ServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AwsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AwsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/controller/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/dtos/RegistrationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/dtos/RegistrationRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/AuthServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/AuthServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/AuthMikroService/auth_users/services/UserServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/apiconfig/KafkaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/apiconfig/KafkaConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/dtos/KafkaCategoryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/kafka/KafkaConsumerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/schedulers/NewsScheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +30,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -125,6 +128,8 @@
       <workItem from="1764801033509" duration="901000" />
       <workItem from="1764936980477" duration="56000" />
       <workItem from="1766847087680" duration="2588000" />
+      <workItem from="1766880070400" duration="2715000" />
+      <workItem from="1766909632413" duration="1842000" />
     </task>
     <servers />
   </component>
