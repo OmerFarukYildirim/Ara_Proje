@@ -12,13 +12,11 @@ public interface UserService {
 
     User getCurrentLoggedInUser();
 
-    //Response<List<UserDTO>> getAllUsers();
-
     Response<UserDTO> getOwnAccountDetails();
 
-    //Response<?> updateOwnAccount(UserDTO userDTO);
+    Response<?> updateOwnAccount(UserDTO userDTO);
 
-    //Response<?> deactivateOwnAccount();
+    Response<?> deactivateOwnAccount();
 
     Response<UserDTO> getUserProfileById(Long id);
 
