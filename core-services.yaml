@@ -42,7 +42,7 @@ spec:
         - name: KAFKA_TOPIC_MIXED_REPLY
           value: "mixed-feed-reply-topic"
         - name: NEWSDATA_API_KEY
-          value: "pub_35275811c50d4d509890d6c97a26f83f23928"
+          value: "pub_b5a43cbfda414895b80e91fb1f51f017"
         - name: RECOMMENDER_SERVICE_URL
           value: "http://recommender-service:8004"
         - name: TRUSTED_API_KEY
