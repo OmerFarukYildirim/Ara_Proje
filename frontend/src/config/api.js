@@ -3,16 +3,16 @@
 const API_HOST = "34.28.74.163";
 
 // Ana API Base URL (Auth, Users vb.)
-export const API_BASE_URL = `http://${API_HOST}:8090/api`;
+export const API_BASE_URL = `http://${API_HOST}:32767/api`;
 
 // Onboarding API Base URL
-export const ONBOARDING_API_BASE_URL = `http://${API_HOST}:8004/api`;
+export const ONBOARDING_API_BASE_URL = `http://${API_HOST}:32051/api`;
 
 // Feed API Base URL
-export const FEED_API_BASE_URL = `http://${API_HOST}:8001/api`;
+export const FEED_API_BASE_URL = `http://${API_HOST}:30188/api`;
 
 // Interaction API Base URL
-export const INTERACTION_API_BASE_URL = `http://${API_HOST}:8004/api`;
+export const INTERACTION_API_BASE_URL = `http://${API_HOST}:32051/api`;
 
 // API Key
 export const API_KEY = "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj";
