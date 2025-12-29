@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/dtos/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AWSS3Service.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AWSS3ServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/AwsConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/aws/TestAWSUpload.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/exceptions/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/AuthMikroService/exceptions/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FetcherMicroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../content-finder/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="f2eae648-a53e-4235-aae6-f8d4a908f45c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +113,7 @@
       <workItem from="1766847087680" duration="2588000" />
       <workItem from="1766880070400" duration="2715000" />
       <workItem from="1766909632413" duration="2437000" />
-      <workItem from="1767008115315" duration="2375000" />
+      <workItem from="1767008115315" duration="2578000" />
     </task>
     <servers />
   </component>
