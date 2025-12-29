@@ -56,7 +56,7 @@ kafka_consumer: Optional[AIOKafkaConsumer] = None # YENİ: Cevap dinleyici
 KAFKA_TOPIC_MIXED_REPLY = "mixed-feed-reply-topic"
 KAFKA_TOPIC_UNMIXED_FEED = "unmixed-feed-topic"
 pending_requests: Dict[str, asyncio.Future] = {}   # Cevap bekleyenler
-NEWSDATA_API_KEY = "pub_01dca7322fcf46e583aa9fa5498abb97"
+NEWSDATA_API_KEY = "pub_b5a43cbfda414895b80e91fb1f51f017"
 
 scheduler = AsyncIOScheduler()
 
