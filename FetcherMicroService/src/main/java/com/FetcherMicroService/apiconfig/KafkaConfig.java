@@ -1,6 +1,6 @@
 package com.FetcherMicroService.apiconfig;
 
-import com.FetcherMicroService.dtos.KafkaCategoryRequest;
+import com.FetcherMicroService.dtos.NewsScrapingRequestDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -47,7 +47,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, KafkaCategoryRequest.class);
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, NewsScrapingRequestDTO.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.FetcherMicroService.dtos");
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
 

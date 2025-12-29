@@ -24,7 +24,7 @@ public class RegistrationRequest {
 
     @NotBlank(message = "Password is required")
     @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+            regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%&+=!_.^])(?=\\S+$).{8,}$",
             message = "Şifre en az 8 karakter olmalı, 1 büyük harf, 1 sayı ve 1 özel karakter içermelidir."
     )
     private String password;

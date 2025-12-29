@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     recommender_service_url: str # YENİ
     trusted_api_key: str         # YENİ
 
+    newsdata_api_key: str
     class Config:
         env_file = ".env"
 

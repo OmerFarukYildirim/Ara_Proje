@@ -1,0 +1,165 @@
+# --- REDIS ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-cache
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: redis-cache
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+spec:
+  selector:
+    matchLabels:
+      app: redis-cache
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        command: ["redis-server", "--requirepass", "12345"]
+        # EKLENEN KISIM: Redis için kaynak sınırları
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi" # Cache için 256MB genelde yeterlidir, VM'i yormaz.
+            cpu: "500m"
+---
+# --- ELASTICSEARCH ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  ports:
+  - port: 9200
+  selector:
+    app: elasticsearch
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        env:
+        - name: discovery.type
+          value: single-node
+        - name: xpack.security.enabled
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+        resources:
+          limits:
+            memory: "2Gi" # Elastic için ayrılan katı sınır
+---
+# --- DB INIT SCRIPT (Database'leri oluşturacak script) ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+data:
+  init-dbs.sh: |
+    #!/bin/bash
+    set -e
+    # Tek tek veritabanlarını oluşturuyoruz
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+        CREATE DATABASE authmicroservicedb;
+        CREATE DATABASE recommender_db;
+        CREATE DATABASE "UserReads";
+    EOSQL
+---
+# --- UNIFIED POSTGRES DEPLOYMENT ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-unified
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-unified
+  template:
+    metadata:
+      labels:
+        app: postgres-unified
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "12345"
+        - name: POSTGRES_USER
+          value: "postgres"
+        # Bu kaynak ayarı 10GB VM için optimize edilmiştir
+        resources:
+          requests:
+            memory: "512Mi"  # En az yarım GB ile başlasın
+            cpu: "250m"
+          limits:
+            memory: "1Gi"    # Asla 1GB'ı geçmesin
+            cpu: "1000m"
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script
+        configMap:
+          name: postgres-init-script
+---
+# --- SERVICES (Yönlendirmeler) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-auth
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-recommender
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-userreads
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified

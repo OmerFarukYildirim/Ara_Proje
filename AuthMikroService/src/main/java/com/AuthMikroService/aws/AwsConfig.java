@@ -1,6 +1,5 @@
 package com.AuthMikroService.aws;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +8,10 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.net.URI;
+
 @Configuration
 public class AwsConfig {
-
 
     @Value("${aws.s3.region}")
     private String awsRegion;
@@ -22,20 +22,23 @@ public class AwsConfig {
     @Value("${aws.secretKey}")
     private String awsSecretKey;
 
+    // Yeni eklenen: MinIO sunucu adresi
+    @Value("${aws.s3.endpoint}")
+    private String awsEndpoint;
 
     @Bean
     public StaticCredentialsProvider staticCredentialsProvider() {
         return StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKey, awsSecretKey));
     }
 
-
     @Bean
     public S3Client s3Client(StaticCredentialsProvider credentialsProvider) {
         return S3Client.builder()
                 .region(Region.of(awsRegion))
                 .credentialsProvider(credentialsProvider)
+                // MinIO AYARLARI BURADA:
+                .endpointOverride(URI.create(awsEndpoint))
+                .forcePathStyle(true) // MinIO için bu ZORUNLUDUR (bucket.domain değil domain/bucket yapısı için)
                 .build();
     }
-
-
 }

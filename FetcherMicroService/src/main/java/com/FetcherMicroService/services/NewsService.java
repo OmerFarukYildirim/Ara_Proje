@@ -1,13 +1,14 @@
 package com.FetcherMicroService.services;
 
 import com.FetcherMicroService.dtos.*;
-import com.fasterxml.jackson.databind.ObjectMapper; // YENİ
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient; // YENİ
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -15,153 +16,169 @@ public class NewsService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final String processedTopicName;
-    private final WebClient llmWebClient; // YENİ
-    private final String llmApiKey; // YENİ
-    private final ObjectMapper objectMapper; // YENİ
+    private final WebClient llmWebClient;
+    private final String llmApiKey;
+    private final ObjectMapper objectMapper;
 
     public NewsService(
             KafkaTemplate<String, Object> kafkaTemplate,
-            WebClient.Builder webClientBuilder, // YENİ
+            WebClient.Builder webClientBuilder,
             @Value("${kafka.topic.news.processed}") String processedTopicName,
-            @Value("${llm.api.baseurl}") String llmBaseUrl, // YENİ
-            @Value("${llm.api.key}") String llmApiKey // YENİ
+            @Value("${llm.api.baseurl}") String llmBaseUrl,
+            @Value("${llm.api.key}") String llmApiKey
     ) {
         this.kafkaTemplate = kafkaTemplate;
         this.processedTopicName = processedTopicName;
-        this.llmWebClient = webClientBuilder.baseUrl(llmBaseUrl).build(); // YENİ
-        this.llmApiKey = llmApiKey; // YENİ
-        this.objectMapper = new ObjectMapper(); // YENİ
+        this.llmWebClient = webClientBuilder.baseUrl(llmBaseUrl).build();
+        this.llmApiKey = llmApiKey;
+        this.objectMapper = new ObjectMapper();
     }
 
-    // --- BU METOT ARTIK GERÇEK BİR LLM ÇAĞRISI YAPIYOR ---
-    private Mono<NewsResponseDTO> fetchFromLlm(String requestCategory, int count) {
-        System.out.println(">>> Gerçek LLM'e istek hazırlanıyor. Kategori: " + requestCategory + ", Sayı: " + count);
+    // HTML İndirme (Reactive)
+    // NewsService.java içindeki downloadHtml metodunu bununla değiştir:
 
-        // 1. LLM için Prompt Hazırla
-        String prompt = createLlmPrompt(requestCategory, count);
-
-        // 2. Gemini İstek (Request) Body'sini Oluştur
-        GeminiRequest llmRequest = new GeminiRequest(
-                List.of(new GeminiContent(List.of(new GeminiPart(prompt))))
-        );
-
-        // 3. LLM API'sine POST İsteği At
-        return this.llmWebClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/v1beta/models/gemini-2.0-flash:generateContent")
-                        .queryParam("key", this.llmApiKey)
-                        .build())
-                .bodyValue(llmRequest)
-                .retrieve() // İsteği gönder
-                .bodyToMono(GeminiResponse.class) // Gelen yanıtı DTO'ya map'le
-                .flatMap(geminiResponse -> {
-                    // 4. LLM'in yanıtının içindeki 'text'i (JSON string) al
-                    String jsonText = geminiResponse.getGeneratedText();
-                    if (jsonText == null) {
-                        return Mono.error(new RuntimeException("LLM'den boş yanıt geldi."));
-                    }
-
-                    // 5. LLM'in ürettiği JSON string'ini NewsResponseDTO'ya çevir
-                    try {
-                        // JSON'un başındaki ve sonundaki ```json ... ``` kısımlarını temizle
-                        jsonText = jsonText.replace("```json", "").replace("```", "").trim();
-
-                        jsonText = jsonText.replace("\\'", "'");
-
-                        NewsResponseDTO newsResponse = objectMapper.readValue(jsonText, NewsResponseDTO.class);
-                        return Mono.just(newsResponse);
-                    } catch (Exception e) {
-                        System.err.println("LLM'in ürettiği JSON parse edilemedi: " + e.getMessage());
-                        System.err.println("GELEN HAM TEXT: " + jsonText);
-                        return Mono.error(e);
-                    }
-                })
-                .doOnError(error -> System.err.println("LLM API Hatası: " + error.getMessage()));
+    private Mono<String> downloadHtml(String url) {
+        return WebClient.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB buffer (Büyük sayfalar için)
+                .build()
+                .get()
+                .uri(url)
+                // --- KRİTİK HEADER AYARLARI ---
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8")
+                .header("Accept-Language", "en-US,en;q=0.9,tr;q=0.8")
+                .header("Referer", "https://www.google.com/") // Google'dan gelmiş gibi yap
+                .header("Upgrade-Insecure-Requests", "1")
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10))
+                .onErrorResume(e -> {
+                    // Hata detayını daha net görelim
+                    System.err.println(">>> HTML İNDİRİLEMEDİ (" + url + "): " + e.getMessage());
+                    // 403 veya 404 alırsak akışı bozma, boş dön.
+                    return Mono.empty();
+                });
     }
 
-    // --- ANA İŞ MANTIĞI (DEĞİŞİKLİK YOK, SADECE METOT ADI DEĞİŞTİ) ---
-    public Mono<Void> fetchAndProcessNews(KafkaCategoryRequest request) {
+    // LLM Prompt Oluşturma
+    private String createLlmPrompt(String htmlContent, String imageUrl, String category, String url) {
+        String safeUrl = url != null ? url : "";
+        String safeImage = imageUrl != null ? imageUrl : "";
 
-        String category = request.getCategory();
-        int count = request.getCount();
-        // ADIM 1: Mock yerine GERÇEK LLM metodunu çağır
-        Mono<NewsResponseDTO> llmResponseMono = this.fetchFromLlm(category, count);
+        // String.format yerine Java 15+ text blocks ile daha temiz concatenation yapılabilir ama
+        // güvenli olması için String.format kullanmaya devam edelim.
+        // %s karakterlerinin HTML içinde çakışmaması için basit bir replace yapabiliriz.
+        // Ancak Gemini güçlü olduğu için formatı genellikle anlar.
 
-        // ADIM 2: Gelen veriyi Kafka'nın bir sonraki topic'ine yolla
-        return llmResponseMono
-                .flatMap(newsResponse -> {
-                    List<ArticleDTO> articles = newsResponse.getArticles();
+        return String.format("""
+            Aşağıdaki HTML içeriğini bir haber sitesinden çektim. Bu HTML'i analiz et ve içeriği çıkart.
+            
+            HEDEF KATEGORİ: '%s'
+            HABER URL: '%s' (Bunu JSON'daki 'url' alanına koy)
+            RESİM URL: '%s' (Bunu JSON'daki 'image_url' alanına koy)
 
-                    if (articles == null || articles.isEmpty()) {
-                        System.out.println("LLM'den haber bulunamadı (Kategori: " + category + ")");
+            Senden istediğim çıktı formatı TAM OLARAK aşağıdaki JSON yapısıdır.
+            Başka hiçbir açıklama yapma. Sadece JSON.
+
+            HTML İÇERİĞİ:
+            %s
+
+            ***JSON FORMATI:***
+            ```json
+            {
+              "status": "ok",
+              "totalResults": 1,
+              "articles": [
+                {
+                  "title": "Haber Başlığı",
+                  "description": "Kısa özet",
+                  "content": "Detaylı içerik",
+                  "url": "%s",
+                  "image_url": "%s",
+                  "category": "%s"
+                }
+              ]
+            }
+            ```
+            """, category, safeUrl, safeImage, htmlContent, safeUrl, safeImage, category);
+    }
+
+    // ANA METOT: fetchAndProcessNews
+    public Mono<Void> fetchAndProcessNews(NewsScrapingRequestDTO request) {
+        String targetUrl = request.getUrl();
+        String imageUrl = request.getImageUrl();
+        String category = request.getTargetCategory();
+
+        System.out.println(">>> İşlem Başlıyor. URL: " + targetUrl);
+
+        // Adım 1: HTML İndir
+        return downloadHtml(targetUrl)
+                .flatMap(htmlContent -> {
+                    if (htmlContent == null || htmlContent.isEmpty()) {
+                        System.err.println("Boş HTML içeriği, atlanıyor: " + targetUrl);
                         return Mono.empty();
                     }
 
-                    System.out.println(articles.size() + " adet GERÇEK haber (LLM) üretildi. " +
-                            "Kafka topic'ine yollanıyor: " + this.processedTopicName);
+                    // Adım 2: Prompt Oluştur
+                    String prompt = createLlmPrompt(htmlContent, imageUrl, category, targetUrl);
 
-                    articles.forEach(article -> {
-                        // Her habere kategorisini de ekleyelim (eğer eksikse)
-                        if (article.getCategory() == null || article.getCategory().isEmpty()) {
-                            article.setCategory(category);
-                        }
-                        this.kafkaTemplate.send(this.processedTopicName, article);
-                    });
+                    // Adım 3: LLM'e Gönder
+                    GeminiRequest llmRequest = new GeminiRequest(
+                            List.of(new GeminiContent(List.of(new GeminiPart(prompt))))
+                    );
 
-                    return Mono.empty();
+                    return this.llmWebClient.post()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/v1beta/models/gemini-2.0-flash:generateContent")
+                                    .queryParam("key", this.llmApiKey)
+                                    .build())
+                            .bodyValue(llmRequest)
+                            .retrieve()
+                            .bodyToMono(GeminiResponse.class);
                 })
-                .doOnError(error -> System.err.println("Haber işleme hatası: " + error.getMessage()))
-                .then(); // Mono<Void> döndür
-    }
+                .flatMap(geminiResponse -> {
+                    // Adım 4: Yanıtı Parse Et ve Kafka'ya Bas
+                    String jsonText = geminiResponse.getGeneratedText();
+                    if (jsonText == null) return Mono.error(new RuntimeException("LLM boş döndü"));
 
-    private String createLlmPrompt(String category, int count) {
-        // Prompt metni güncellendi: '3 adet' yerine '%d adet' gelecek
-        return String.format("""
-                'world' kategorisini görmezden gel ve SADECE '%s' kategorisiyle ilgili %d adet haber makalesi oluştur.
-                Yanıtın, başka HİÇBİR AÇIKLAMA OLMADAN, doğrudan aşağıdaki JSON formatında olmalıdır.
-                Tüm alanlar dolu olmalı, 'content' alanı en az 150 kelime olmalıdır.
+                    try {
+                        jsonText = jsonText.replace("```json", "").replace("```", "").trim();
 
-                
-                ***JSON FORMATI İÇİN HAYATİ KURALLAR:***
-                1. JSON yapısını bozan karakterler kullanma.
-                2. "title", "description" ve "content" alanlarının İÇERİĞİNDE **ASLA ÇİFT TIRNAK (") İŞARETİ KULLANMA.**
-                3. Eğer bir şeyi vurgulaman veya alıntı yapman gerekiyorsa, **SADECE TEK TIRNAK (') KULLAN.** (Örnek: "Ali 'geliyorum' dedi" -> DOĞRU. "Ali "geliyorum" dedi" -> YANLIŞ/YASAK).
-                4. Yanıtın saf bir JSON olmalı, başında ```json veya sonunda ``` olmamalı (varsa da kodum siliyor ama sen yine de koyma).
-                ***ÇOK ÖNEMLİ KURAL: SENDEN KAÇ TANE HABER İSTEDİYSEM AŞAĞIDAKİ ÖRNEK VERDİĞİM JSON FORMATINDA O KADAR HABERİ BANA DÖNDÜRECEKSİN.
-                *** AŞAĞIDA SANA 3 TANE HABER İSTEDİĞİM DURUMDA DÖNECEĞİN ÖRNEK JSON FORMATINI VERDİM. 4 TANE İSTESEYDİM totalResults = 4 olurdu ve ARTİCLES İÇİNDE 4 TANE HABER OLURDU.
-                
-                ```json
-                {
-                  "status": "ok",
-                  "totalResults": %d,
-                  "articles": [
-                    {
-                      "title": "İlk Haber Başlığı (Örnek \"Alıntı\" İçeriyor)",
-                      "description": "İlk haberin kısa açıklaması.",
-                      "content": "İlk haberin en az 100 kelimelik detaylı içeriği... Bu içerik de \"Alıntılanmış\" bir bölüm içerebilir.",
-                      "url": "[https://gercekci-haber-sitesi.com/haber/ilk-haber-basligi-123](https://gercekci-haber-sitesi.com/haber/ilk-haber-basligi-123)",
-                      "image_url": "[https://images.gercekci-haber-sitesi.com/resimler/ilk-haber.jpg](https://images.gercekci-haber-sitesi.com/resimler/ilk-haber.jpg)",
-                      "category": "%s"
-                    },
-                    {
-                      "title": "İkinci Haber Başlığı",
-                      "description": "İkinci haberin kısa açıklaması.",
-                      "content": "İkinci haberin en az 100 kelimelik detaylı içeriği...",
-                      "url": "[https://baska-bir-site.net/makale/ikinci-haber-basligi-456](https://baska-bir-site.net/makale/ikinci-haber-basligi-456)",
-                      "image_url": "[https://img.baska-bir-site.net/fotograflar/ikinci.png](https://img.baska-bir-site.net/fotograflar/ikinci.png)",
-                      "category": "%s"
-                    },
-                    {
-                      "title": "Üçüncü Haber Başlığı",
-                      "description": "Üçüncü haberin kısa açıklaması.",
-                      "content": "Üçüncü haberin en az 100 kelimelik detaylı içeriği...",
-                      "url": "[https://teknoloji-portali.org/yazi/ucuncu-haber-789](https://teknoloji-portali.org/yazi/ucuncu-haber-789)",
-                      "image_url": "[https://cdn.teknoloji-portali.org/gorseller/ucuncu-haber.webp](https://cdn.teknoloji-portali.org/gorseller/ucuncu-haber.webp)",
-                      "category": "%s"
+                        NewsResponseDTO newsResponse = objectMapper.readValue(jsonText, NewsResponseDTO.class);
+
+                        if (newsResponse.getArticles() != null) {
+                            newsResponse.getArticles().forEach(article -> {
+
+                                // --- YENİ EKLENEN FİLTRELEME MANTIĞI ---
+                                // Eğer LLM içerik bulamazsa prompttaki örnekleri ("Haber Başlığı", "Detaylı içerik") dönebilir.
+                                // Veya başlık boş gelebilir. Bunları eliyoruz.
+                                if (article.getTitle() == null ||
+                                        article.getTitle().isEmpty() ||
+                                        "Haber Başlığı".equalsIgnoreCase(article.getTitle()) ||
+                                        "Detaylı içerik".equalsIgnoreCase(article.getContent()) ||
+                                        "Kısa özet".equalsIgnoreCase(article.getDescription())) {
+
+                                    System.err.println(">>> [İPTAL] Kalitesiz/Placeholder içerik. Kafka'ya gönderilmiyor. URL: " + targetUrl);
+                                    return; // Bu haberi atla, döngüdeki sıradakine geç
+                                }
+                                // ---------------------------------------
+
+                                article.setCategory(category); // Kategoriyi garantiye al
+
+                                // Orijinal resim URL'ini koru (LLM bazen değiştirebilir veya boş bırakabilir)
+                                if (article.getImage_url() == null || article.getImage_url().isEmpty() || article.getImage_url().equals("null")) {
+                                    article.setImage_url(imageUrl);
+                                }
+
+                                this.kafkaTemplate.send(this.processedTopicName, article);
+                                System.out.println(">>> [BAŞARILI] Kafka'ya atıldı: " + article.getTitle());
+                            });
+                        }
+                    } catch (Exception e) {
+                        System.err.println("JSON Parse Hatası (" + targetUrl + "): " + e.getMessage());
+                        // Hata olsa bile Mono.empty dönerek akışı kırmıyoruz
                     }
-                  ]
-                }
-                ```
-                """, category,count,count, category, category, category);
+                    return Mono.empty();
+                });
     }
 }
