@@ -45,6 +45,10 @@ function NewsDetail() {
   const newsIdFromState = useRef(location.state?.newsId || id);
   const categoryFromState = useRef(location.state?.category || "general");
   const newsTitleRef = useRef("Yükleniyor...");
+  // Interaction durumlarını ref ile takip et (sadece sayfadan çıkınca API isteği atılacak)
+  const isLikedRef = useRef(false);
+  const isDislikedRef = useRef(false);
+  const isSharedRef = useRef(false);
 
   useEffect(() => {
     // State'den haber verisi var mı kontrol et
@@ -266,25 +270,37 @@ function NewsDetail() {
     }
   }, []);
 
-  // Detay sayfası görünür olduğunda zaman saymaya başla
+  // id veya haber değiştiğinde zamanlayıcıyı ve ref'leri sıfırla (API isteği atma)
   useEffect(() => {
-    // Sayfa yüklendiğinde hemen başlat
+    // Yeni haber yüklendiğinde zamanlayıcıyı başlat
     detailViewStartTime.current = Date.now();
+    // Interaction ref'lerini sıfırla
+    isLikedRef.current = false;
+    isDislikedRef.current = false;
+    isSharedRef.current = false;
     
-    // Sayfa kapatıldığında veya navigate edildiğinde API istekleri gönder
+    // newsIdFromState ve categoryFromState'i güncelle
+    newsIdFromState.current = location.state?.newsId || id;
+    categoryFromState.current = location.state?.category || news?.category || "general";
+    firstSpendingTime.current = location.state?.firstSpendingTime || 0;
+  }, [id, location.state, news?.category]);
+
+  // Sadece sayfadan çıkınca (unmount) tek bir API isteği gönder
+  useEffect(() => {
+    // Component unmount olduğunda API isteği gönder
     return () => {
       if (detailViewStartTime.current !== null) {
         const secondSpendingTime = (Date.now() - detailViewStartTime.current) / 1000; // saniye cinsinden
         
-        // Interaction API isteği gönder
+        // Interaction API isteği gönder (ref'lerden güncel değerleri al)
         sendInteractionAPI(
           newsIdFromState.current,
           categoryFromState.current,
           firstSpendingTime.current,
           "yes", // click_detail her zaman "yes" çünkü detay sayfasındayız
-          isLiked ? "yes" : "no",
-          isDisliked ? "yes" : "no",
-          isShared ? "yes" : "no",
+          isLikedRef.current ? "yes" : "no",
+          isDislikedRef.current ? "yes" : "no",
+          isSharedRef.current ? "yes" : "no",
           secondSpendingTime
         );
         
@@ -292,7 +308,8 @@ function NewsDetail() {
         sendTrackReadAPI(newsIdFromState.current);
       }
     };
-  }, [id, isLiked, isDisliked, isShared, sendInteractionAPI, sendTrackReadAPI]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Boş dependency array - sadece unmount'ta çalışır
 
   // Tuş kombinasyonu ile orijinal haber linkini göster/gizle
   useEffect(() => {
@@ -332,21 +349,28 @@ function NewsDetail() {
   };
 
   const handleLike = () => {
-    setIsLiked(!isLiked);
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState);
+    isLikedRef.current = newLikedState; // Ref'i güncelle
     if (isDisliked) {
       setIsDisliked(false);
+      isDislikedRef.current = false; // Ref'i güncelle
     }
   };
 
   const handleDislike = () => {
-    setIsDisliked(!isDisliked);
+    const newDislikedState = !isDisliked;
+    setIsDisliked(newDislikedState);
+    isDislikedRef.current = newDislikedState; // Ref'i güncelle
     if (isLiked) {
       setIsLiked(false);
+      isLikedRef.current = false; // Ref'i güncelle
     }
   };
 
   const handleShare = () => {
     setIsShared(true);
+    isSharedRef.current = true; // Ref'i güncelle
     if (navigator.share && news) {
       navigator.share({
         title: news.title,

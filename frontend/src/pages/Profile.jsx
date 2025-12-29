@@ -11,6 +11,17 @@ function Profile() {
   const [recommendationsLoading, setRecommendationsLoading] = useState(true);
   const [chartType, setChartType] = useState("bar"); // "bar", "pie" veya "score"
 
+  // Profil düzenleme state'leri
+  const [isEditing, setIsEditing] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    phoneNumber: "",
+    password: ""
+  });
+
   useEffect(() => {
     // Account bilgilerini yükle
     const loadAccountData = async () => {
@@ -151,6 +162,130 @@ function Profile() {
     fetchRecommendations();
   }, []);
 
+  // Profil güncelleme fonksiyonu
+  const handleUpdateProfile = async () => {
+    if (!formData.name.trim() || !formData.surname.trim() || !formData.phoneNumber.trim()) {
+      alert("Lütfen tüm alanları doldurun (şifre opsiyonel)");
+      return;
+    }
+
+    // Şifre validasyonu - şifre girildiyse kontrol et
+    if (formData.password.trim()) {
+      if (formData.password.length < 8) {
+        alert("Şifre en az 8 karakter olmalıdır!");
+        return;
+      }
+      if (!/[A-Z]/.test(formData.password)) {
+        alert("Şifre en az 1 büyük harf içermelidir!");
+        return;
+      }
+      if (!/[0-9]/.test(formData.password)) {
+        alert("Şifre en az 1 rakam içermelidir!");
+        return;
+      }
+      if (!/[@#$%^&+=!]/.test(formData.password)) {
+        alert("Lütfen geçerli karakterlerden birini kullan (@#$%^&+=!)");
+        return;
+      }
+    }
+
+    setIsUpdating(true);
+    const token = localStorage.getItem("token");
+
+    try {
+      // Güncelleme için gönderilecek veri
+      const updateData = {
+        name: formData.name.trim(),
+        surname: formData.surname.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
+      };
+
+      // Şifre varsa ekle
+      if (formData.password.trim()) {
+        updateData.password = formData.password.trim();
+      }
+
+      console.log("Update Profile API Request:", {
+        url: `${API_BASE_URL}/users/update`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+        body: updateData,
+      });
+
+      const response = await fetch(`${API_BASE_URL}/users/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": API_KEY,
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        data = { message: responseText };
+      }
+
+      console.log("Update Profile API Response:", {
+        status: response.status,
+        statusText: response.statusText,
+        data: data,
+      });
+
+      if (response.ok) {
+        // Başarılı güncelleme
+        alert("Profil başarıyla güncellendi!");
+        
+        // Account data'yı yeniden yükle
+        const accountResponse = await fetch(`${API_BASE_URL}/users/account`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": API_KEY,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const accountResponseText = await accountResponse.text();
+        let accountData;
+        try {
+          accountData = JSON.parse(accountResponseText);
+        } catch {
+          accountData = { message: accountResponseText };
+        }
+
+        if (accountResponse.ok && accountData.statusCode === 200 && accountData.data) {
+          setAccountData(accountData.data);
+          localStorage.setItem("accountData", JSON.stringify(accountData.data));
+        }
+
+        setIsEditing(false);
+        setFormData({
+          name: "",
+          surname: "",
+          phoneNumber: "",
+          password: ""
+        });
+      } else {
+        const errorMessage = data.message || data.error || "Profil güncellenirken bir hata oluştu. Lütfen tekrar deneyin.";
+        alert(errorMessage);
+      }
+    } catch (error) {
+      console.error("Update profile error:", error);
+      alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   const handleResetAlgorithm = async () => {
     if (!window.confirm("Keşfet algoritmasını sıfırlamak istediğinizden emin misiniz? Bu işlem ilgi alanlarınızı ve öğrenme verilerinizi sıfırlayacaktır.")) {
       return;
@@ -288,8 +423,277 @@ function Profile() {
 
           {/* Kullanıcı Bilgileri */}
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Kullanıcı Bilgileri</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-800">Kullanıcı Bilgileri</h3>
+              {!isEditing && (
+                <button
+                  onClick={() => {
+                    setIsEditing(true);
+                    setFormData({
+                      name: name || "",
+                      surname: surname || "",
+                      phoneNumber: phoneNumber || "",
+                      password: ""
+                    });
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white text-sm font-semibold rounded-lg hover:from-red-700 hover:to-rose-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95"
+                >
+                  Düzenle
+                </button>
+              )}
+            </div>
             
+            {isEditing ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* İsim */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Ad
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      placeholder="Adınızı girin"
+                    />
+                  </div>
+
+                  {/* Soyisim */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Soyad
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.surname}
+                      onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      placeholder="Soyadınızı girin"
+                    />
+                  </div>
+
+                  {/* Telefon */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Telefon Numarası
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.phoneNumber}
+                      onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                      placeholder="Telefon numaranızı girin"
+                    />
+                  </div>
+
+                  {/* Şifre */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Yeni Şifre (Opsiyonel)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                        placeholder="Yeni şifrenizi girin"
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center z-10 hover:text-red-600 cursor-pointer transition-colors focus:outline-none"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                      >
+                        {showPassword ? (
+                          <svg
+                            className="h-5 w-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            className="h-5 w-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                    {/* Şifre validasyon kuralları - sadece şifre girildiğinde göster */}
+                    {formData.password && (
+                      <div className="mt-2 bg-gray-50 rounded-lg p-3">
+                        <h4 className="text-xs font-medium text-gray-700 mb-2">
+                          Şifre Gereksinimleri:
+                        </h4>
+                        <ul className="text-xs text-gray-600 space-y-1">
+                          <li
+                            className={`flex items-center ${
+                              formData.password.length >= 8
+                                ? "text-green-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            <svg
+                              className={`w-3 h-3 mr-2 ${
+                                formData.password.length >= 8
+                                  ? "text-green-500"
+                                  : "text-gray-400"
+                              }`}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            En az 8 karakter
+                          </li>
+                          <li
+                            className={`flex items-center ${
+                              /[0-9]/.test(formData.password)
+                                ? "text-green-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            <svg
+                              className={`w-3 h-3 mr-2 ${
+                                /[0-9]/.test(formData.password)
+                                  ? "text-green-500"
+                                  : "text-gray-400"
+                              }`}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            En az 1 rakam
+                          </li>
+                          <li
+                            className={`flex items-center ${
+                              /[A-Z]/.test(formData.password)
+                                ? "text-green-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            <svg
+                              className={`w-3 h-3 mr-2 ${
+                                /[A-Z]/.test(formData.password)
+                                  ? "text-green-500"
+                                  : "text-gray-400"
+                              }`}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            En az 1 büyük harf
+                          </li>
+                          <li
+                            className={`flex items-center ${
+                              /[@#$%^&+=!]/.test(formData.password)
+                                ? "text-green-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            <svg
+                              className={`w-3 h-3 mr-2 ${
+                                /[@#$%^&+=!]/.test(formData.password)
+                                  ? "text-green-500"
+                                  : "text-gray-400"
+                              }`}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            En az 1 özel karakter (@#$%^&+=!)
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* E-posta (sadece göster) */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    E-posta Adresi
+                  </label>
+                  <input
+                    type="email"
+                    value={email || ""}
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-900 cursor-not-allowed"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">E-posta adresi değiştirilemez</p>
+                </div>
+
+                {/* Butonlar */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleUpdateProfile}
+                    disabled={isUpdating}
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-rose-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                  >
+                    {isUpdating ? "Güncelleniyor..." : "Kaydet"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setFormData({
+                        name: "",
+                        surname: "",
+                        phoneNumber: "",
+                        password: ""
+                      });
+                    }}
+                    disabled={isUpdating}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    İptal
+                  </button>
+                </div>
+              </div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* İsim */}
               <div className="p-4 bg-red-50 rounded-xl border border-red-100">
@@ -323,6 +727,7 @@ function Profile() {
                 </p>
             </div>
             </div>
+            )}
           </div>
 
           {/* Okuma Geçmişi Butonu */}
