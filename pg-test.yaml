@@ -1,0 +1,93 @@
+# --- DB INIT SCRIPT (Database'leri oluşturacak script) ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+data:
+  init-dbs.sh: |
+    #!/bin/bash
+    set -e
+    # Tek tek veritabanlarını oluşturuyoruz
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+        CREATE DATABASE authmicroservicedb;
+        CREATE DATABASE recommender_db;
+        CREATE DATABASE "UserReads";
+    EOSQL
+---
+# --- UNIFIED POSTGRES DEPLOYMENT ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-unified
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-unified
+  template:
+    metadata:
+      labels:
+        app: postgres-unified
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "12345"
+        - name: POSTGRES_USER
+          value: "postgres"
+        # Bu kaynak ayarı 10GB VM için optimize edilmiştir
+        resources:
+          requests:
+            memory: "512Mi"  # En az yarım GB ile başlasın
+            cpu: "250m"
+          limits:
+            memory: "1Gi"    # Asla 1GB'ı geçmesin (Sistemi korur)
+            cpu: "1000m"
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script
+        configMap:
+          name: postgres-init-script
+---
+# --- SERVICES (Eski kodların bozulmaması için yönlendirmeler) ---
+# 1. Auth Service buna bağlanacak
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-auth
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified # Hepsi tek yere gidiyor
+---
+# 2. Recommender Service buna bağlanacak
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-recommender
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified
+---
+# 3. UserReads (Core) buna bağlanacak
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-userreads
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres-unified

@@ -1,0 +1,158 @@
+# --- FETCHER SERVICE (Arka Plan - Java) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fetcher-service
+spec:
+  selector:
+    app: fetcher-service
+  ports:
+    - port: 8091
+      targetPort: 8091
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fetcher-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fetcher-service
+  template:
+    metadata:
+      labels:
+        app: fetcher-service
+    spec:
+      containers:
+      - name: fetcher-service
+        image: omerfarukyildirim/fetcher-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SERVER_PORT
+          value: "8091"
+        - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+          value: "fetcher-group"
+        - name: KAFKA_TOPIC_NEWS_REQUEST
+          value: "haber_talebi_topic"
+        - name: KAFKA_TOPIC_NEWS_PROCESSED
+          value: "haber_zenginlestirme_topic"
+        - name: LLM_API_KEY
+          value: "AIzaSyB6zoXCSEWPMuKsCWFLnZK0DDmZwh-gkU8"
+        - name: LLM_API_BASEURL
+          value: "https://generativelanguage.googleapis.com"
+        # JAVA BELLEK AYARI
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=75.0"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+# --- PROCESSOR SERVICE (Arka Plan - .NET Core) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: processor-service
+spec:
+  selector:
+    app: processor-service
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processor-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: processor-service
+  template:
+    metadata:
+      labels:
+        app: processor-service
+    spec:
+      containers:
+      - name: processor-service
+        image: omerfarukyildirim/processor-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: Kafka__Broker
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: Kafka__ConsumerTopic
+          value: "haber_zenginlestirme_topic"
+        - name: Kafka__ProducerTopic
+          value: "haber_isleme_topic"
+        - name: HuggingFace__ApiKey
+          value: "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"
+        - name: HuggingFace__ApiUrl
+          value: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "350Mi" # .NET Core genelde az RAM tüketir
+            cpu: "500m"
+
+---
+# --- AI ENRICHMENT SERVICE (Arka Plan - Python) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-enrichment-service
+spec:
+  selector:
+    app: ai-enrichment-service
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-enrichment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-enrichment-service
+  template:
+    metadata:
+      labels:
+        app: ai-enrichment-service
+    spec:
+      containers:
+      - name: ai-enrichment-service
+        image: omerfarukyildirim/ai-enrichment-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BROKERS
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: KAFKA_TOPIC_CONSUME
+          value: "haber_isleme_topic"
+        - name: KAFKA_CONSUMER_GROUP
+          value: "ai-enrichment-group"
+        - name: ELASTICSEARCH_URL
+          value: "http://elasticsearch:9200"
+        - name: hf_api_key
+          value: "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"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi" # Kütüphane yükü için
+            cpu: "600m"

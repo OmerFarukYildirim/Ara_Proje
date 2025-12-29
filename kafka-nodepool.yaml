@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1 # v1beta2 yerine v1 yaptık
+kind: KafkaNodePool
+metadata:
+  name: my-kafka-pool
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  replicas: 1
+  roles:
+    - controller
+    - broker
+  storage:
+    type: ephemeral
+  # RAM Limitleri (Aynen korundu)
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1536Mi" # Max 1.5 GB
+      cpu: "1000m"
+  jvmOptions:
+    -Xms: 512m
+    -Xmx: 1024m

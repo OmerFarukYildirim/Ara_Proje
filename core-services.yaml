@@ -1,0 +1,169 @@
+# --- CONTENT FINDER SERVICE (Öncelikli - Python/Go) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-finder-service
+spec:
+  selector:
+    app: content-finder-service
+  ports:
+    - port: 8001
+      targetPort: 8001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-finder-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-finder-service
+  template:
+    metadata:
+      labels:
+        app: content-finder-service
+    spec:
+      containers:
+      - name: content-finder-service
+        image: omerfarukyildirim/content-finder-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:12345@postgres-userreads:5432/UserReads"
+        - name: ELASTICSEARCH_URL
+          value: "http://elasticsearch:9200"
+        - name: KAFKA_BROKERS
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: KAFKA_TOPIC_NEWS_REQUEST
+          value: "haber_talebi_topic"
+        - name: KAFKA_TOPIC_UNMIXED_FEED
+          value: "unmixed-feed-topic"
+        - name: KAFKA_TOPIC_MIXED_REPLY
+          value: "mixed-feed-reply-topic"
+        - name: NEWSDATA_API_KEY
+          value: "pub_35275811c50d4d509890d6c97a26f83f23928"
+        - name: RECOMMENDER_SERVICE_URL
+          value: "http://recommender-service:8004"
+        - name: TRUSTED_API_KEY
+          value: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi" # Yüksek trafik için 512MB yeterli (Stateless ise)
+            cpu: "800m"
+
+---
+# --- CONTENT MIXER SERVICE (Arka Plan - Java) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-mixer-service
+spec:
+  selector:
+    app: content-mixer-service
+  ports:
+    - port: 8092
+      targetPort: 8092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-mixer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: content-mixer-service
+  template:
+    metadata:
+      labels:
+        app: content-mixer-service
+    spec:
+      containers:
+      - name: content-mixer-service
+        image: omerfarukyildirim/content-mixer-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SERVER_PORT
+          value: "8092"
+        - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+          value: "news-mixer-group"
+        - name: APP_KAFKA_TOPIC_REQUEST
+          value: "unmixed-feed-topic"
+        - name: APP_KAFKA_TOPIC_REPLY
+          value: "mixed-feed-reply-topic"
+        # JAVA BELLEK AYARI
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=75.0"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi" # Java olduğu için en az 512 verilmeli
+            cpu: "500m"
+
+---
+# --- RECOMMENDER SERVICE (Öncelikli - Python/Go) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommender-service
+spec:
+  selector:
+    app: recommender-service
+  ports:
+    - port: 8004
+      targetPort: 8004
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommender-service
+spec:
+  selector:
+    matchLabels:
+      app: recommender-service
+  template:
+    metadata:
+      labels:
+        app: recommender-service
+    spec:
+      containers:
+      - name: recommender-service
+        image: omerfarukyildirim/recommender-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "8004"
+        - name: DATABASE_URL
+          value: "postgresql://postgres:12345@postgres-recommender:5432/recommender_db"
+        - name: REDIS_ADDR
+          value: "redis-cache:6379"
+        - name: REDIS_PASSWORD
+          value: "12345"
+        - name: AUTH_SERVICE_URL
+          value: "http://auth-service:8090"
+        - name: TRUSTED_API_KEY
+          value: "bJNB32JHE4G78CBYcdsc7TX86txbn31cxn67GVXXg8BHCDSBghbhcj"
+        - name: KAFKA_BROKERS
+          value: "my-kafka-kafka-bootstrap.kafka:9092"
+        - name: KAFKA_TOPIC_ONBOARDING
+          value: "onboarding_events"
+        - name: KAFKA_TOPIC_INTERACTION
+          value: "interaction_events"
+        # RESOURCE OPTIMIZASYONU
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi" # ML model yüklemiyorsa 512 çok rahat yeter
+            cpu: "800m"
