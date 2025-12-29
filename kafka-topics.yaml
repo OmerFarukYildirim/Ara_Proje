@@ -1,0 +1,89 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: haber-talebi-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+  config:
+    retention.ms: 604800000 # 7 gün
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: haber-zenginlestirme-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: haber-isleme-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: unmixed-feed-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: mixed-feed-reply-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: onboarding-events
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: interaction-events
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: notification-events
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-kafka
+spec:
+  partitions: 3
+  replicas: 1
