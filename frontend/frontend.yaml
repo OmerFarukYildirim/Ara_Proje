@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: omerfarukyildirim/frontend-image:v1
+        image: omerfarukyildirim/frontend-image:v8
         imagePullPolicy: Always
         ports:
         - containerPort: 80
