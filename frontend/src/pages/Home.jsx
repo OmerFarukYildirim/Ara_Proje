@@ -77,13 +77,16 @@ function Home() {
         {/* Biz Kimiz Bölümü */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-red-100">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Biz Kimiz?</h2>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-gray-700 leading-relaxed mb-4">
             Lokum Haber, Türkiye'nin köklü ve güvenilir haber platformlarından biridir. 
             Yılların deneyimi ve geleneksel gazetecilik değerlerini modern teknolojiyle 
             buluşturarak, okuyucularımıza en kaliteli haber deneyimini sunmayı hedefliyoruz. 
             Tıpkı Türk lokumunun yüzyıllardır nesillerden nesillere aktarılan geleneksel bir 
             lezzet olması gibi, biz de haberlerimizi titizlikle hazırlayıp, doğruluğunu ve 
             güvenilirliğini koruyarak sizlere sunuyoruz.
+          </p>
+          <p className="text-gray-700 leading-relaxed font-semibold text-lg">
+            Aynı zamanda yabancı dilinizi geliştirmeye yardımcı oluyoruz.
           </p>
         </div>
 
