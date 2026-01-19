@@ -6,6 +6,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-kafka
 spec:
+  topicName: haber_talebi_topic
   partitions: 3
   replicas: 1
   config:
@@ -19,6 +20,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-kafka
 spec:
+  topicName: haber_zenginlestirme_topic
   partitions: 3
   replicas: 1
 ---
@@ -30,6 +32,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-kafka
 spec:
+  topicName: haber_isleme_topic
   partitions: 3
   replicas: 1
 ---
@@ -63,6 +66,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-kafka
 spec:
+  topicName: onboarding_events
   partitions: 3
   replicas: 1
 ---
@@ -74,6 +78,7 @@ metadata:
   labels:
     strimzi.io/cluster: my-kafka
 spec:
+  topicName: interaction_events
   partitions: 3
   replicas: 1
 ---

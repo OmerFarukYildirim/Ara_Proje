@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: content-finder-service
 spec:
+  type: NodePort
   selector:
     app: content-finder-service
   ports:
@@ -118,6 +119,7 @@ kind: Service
 metadata:
   name: recommender-service
 spec:
+  type: NodePort
   selector:
     app: recommender-service
   ports:
