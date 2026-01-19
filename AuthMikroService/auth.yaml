@@ -8,14 +8,15 @@ spec:
   ports:
     - port: 8090
       targetPort: 8090
-  type: ClusterIP
+      nodePort: 30003
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: auth-service
@@ -26,7 +27,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: omerfarukyildirim/auth-service:2.0
+          image: omerfarukyildirim/auth-image:v9
           imagePullPolicy: Always
           ports:
             - containerPort: 8090
@@ -47,8 +48,8 @@ spec:
           # EKLENEN KISIM: Resource Limits
           resources:
             requests:
-              memory: "400Mi"  # Başlangıçta 300MB ayır
-              cpu: "300m"
+              memory: "300Mi"  # Başlangıçta 300MB ayır
+              cpu: "200m"
             limits:
-              memory: "800Mi"  # En fazla 600MB kullanabilsin (Öncelikli servis)
+              memory: "600Mi"  # En fazla 600MB kullanabilsin (Öncelikli servis)
               cpu: "1000m"

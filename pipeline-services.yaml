@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
       - name: fetcher-service
-        image: omerfarukyildirim/fetcher-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/fetcher-image:v9
+        imagePullPolicy: Always
         env:
         - name: SERVER_PORT
           value: "8091"
@@ -40,7 +40,7 @@ spec:
         - name: KAFKA_TOPIC_NEWS_PROCESSED
           value: "haber_zenginlestirme_topic"
         - name: LLM_API_KEY
-          value: "AIzaSyB6zoXCSEWPMuKsCWFLnZK0DDmZwh-gkU8"
+          value: "AIzaSyArouNWNyfPY6019hxIr14yf71I68I78x8"
         - name: LLM_API_BASEURL
           value: "https://generativelanguage.googleapis.com"
         # JAVA BELLEK AYARI
@@ -84,8 +84,8 @@ spec:
     spec:
       containers:
       - name: processor-service
-        image: omerfarukyildirim/processor-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/processor-image:v9
+        imagePullPolicy: Always
         env:
         - name: Kafka__Broker
           value: "my-kafka-kafka-bootstrap.kafka:9092"
@@ -94,7 +94,7 @@ spec:
         - name: Kafka__ProducerTopic
           value: "haber_isleme_topic"
         - name: HuggingFace__ApiKey
-          value: "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"
+          value: "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"
         - name: HuggingFace__ApiUrl
           value: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
         # RESOURCE OPTIMIZASYONU
@@ -135,8 +135,8 @@ spec:
     spec:
       containers:
       - name: ai-enrichment-service
-        image: omerfarukyildirim/ai-enrichment-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/ai-enrichment-image:v9
+        imagePullPolicy: Always
         env:
         - name: KAFKA_BROKERS
           value: "my-kafka-kafka-bootstrap.kafka:9092"
@@ -147,7 +147,7 @@ spec:
         - name: ELASTICSEARCH_URL
           value: "http://elasticsearch:9200"
         - name: hf_api_key
-          value: "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"
+          value: "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"
         # RESOURCE OPTIMIZASYONU
         resources:
           requests:

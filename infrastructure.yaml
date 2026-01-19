@@ -114,15 +114,14 @@ spec:
           value: "12345"
         - name: POSTGRES_USER
           value: "postgres"
-        
-        command: ["postgres", "-c", "max_connections=500", "-c", "shared_buffers=256MB"]
+        # Bu kaynak ayarı 10GB VM için optimize edilmiştir
         resources:
           requests:
             memory: "512Mi"  # En az yarım GB ile başlasın
             cpu: "250m"
           limits:
-            memory: "1.5Gi"    # Asla 1GB'ı geçmesin
-            cpu: "1500m"
+            memory: "1Gi"    # Asla 1GB'ı geçmesin
+            cpu: "1000m"
         volumeMounts:
         - name: init-script
           mountPath: /docker-entrypoint-initdb.d

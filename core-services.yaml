@@ -9,13 +9,14 @@ spec:
   ports:
     - port: 8001
       targetPort: 8001
+      nodePort: 30002
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: content-finder-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: content-finder-service
@@ -26,8 +27,8 @@ spec:
     spec:
       containers:
       - name: content-finder-service
-        image: omerfarukyildirim/content-finder-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/content-finder-image:v9
+        imagePullPolicy: Always
         env:
         - name: DATABASE_URL
           value: "postgresql://postgres:12345@postgres-userreads:5432/UserReads"
@@ -42,7 +43,7 @@ spec:
         - name: KAFKA_TOPIC_MIXED_REPLY
           value: "mixed-feed-reply-topic"
         - name: NEWSDATA_API_KEY
-          value: "pub_b5a43cbfda414895b80e91fb1f51f017"
+          value: "pub_79046520157e4f0db4596df6a17e9775"
         - name: RECOMMENDER_SERVICE_URL
           value: "http://recommender-service:8004"
         - name: TRUSTED_API_KEY
@@ -74,7 +75,7 @@ kind: Deployment
 metadata:
   name: content-mixer-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: content-mixer-service
@@ -85,8 +86,8 @@ spec:
     spec:
       containers:
       - name: content-mixer-service
-        image: omerfarukyildirim/content-mixer-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/content-mixer-image:v9
+        imagePullPolicy: Always
         env:
         - name: SERVER_PORT
           value: "8092"
@@ -122,13 +123,13 @@ spec:
   ports:
     - port: 8004
       targetPort: 8004
+      nodePort: 30001
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recommender-service
 spec:
-  replicas: 2
   selector:
     matchLabels:
       app: recommender-service
@@ -139,8 +140,8 @@ spec:
     spec:
       containers:
       - name: recommender-service
-        image: omerfarukyildirim/recommender-service:latest
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/recommender-image:v9
+        imagePullPolicy: Always
         env:
         - name: PORT
           value: "8004"

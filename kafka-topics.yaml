@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: haber-talebi-topic
+  name: haber_talebi_topic
   namespace: kafka
   labels:
     strimzi.io/cluster: my-kafka
@@ -14,7 +14,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: haber-zenginlestirme-topic
+  name: haber_zenginlestirme_topic
   namespace: kafka
   labels:
     strimzi.io/cluster: my-kafka
@@ -25,7 +25,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: haber-isleme-topic
+  name: haber_isleme_topic
   namespace: kafka
   labels:
     strimzi.io/cluster: my-kafka
@@ -58,7 +58,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: onboarding-events
+  name: onboarding_events
   namespace: kafka
   labels:
     strimzi.io/cluster: my-kafka
@@ -69,7 +69,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: interaction-events
+  name: interaction_events
   namespace: kafka
   labels:
     strimzi.io/cluster: my-kafka
