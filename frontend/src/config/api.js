@@ -1,9 +1,9 @@
 // API Configuration
 // IP adresini buradan değiştirebilirsiniz
-const API_HOST = "34.28.74.163";
+const API_HOST = "34.134.167.225";
 
 // Ana API Base URL (Auth, Users vb.)
-export const API_BASE_URL = `http://${API_HOST}:32767/api`;
+export const API_BASE_URL = `http://${API_HOST}:32042/api`;
 
 // Onboarding API Base URL
 export const ONBOARDING_API_BASE_URL = `http://${API_HOST}:32051/api`;
