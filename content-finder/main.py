@@ -257,7 +257,7 @@ async def startup_event():
     # 3. Scheduler'ı Başlat
     try:
         # CronTrigger: Her saatin 0. dakikasında (Tam saatlerde)
-        scheduler.add_job(scheduled_news_job, CronTrigger(minute='0'))
+        scheduler.add_job(scheduled_news_job, CronTrigger(minute='0,30'))
         scheduler.start()
         print("[content-finder] ⏰ Otomatik Haber Scheduler Başlatıldı (Cron: minute='0').", flush=True)
     except Exception as e:
