@@ -36,7 +36,7 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Ara_Proje_Backend/content-finder",
+    "last_opened_file_path": "D:/Ara_Proje_Backend/ai-enrichment",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -97,6 +97,8 @@
       <workItem from="1762511291977" duration="3732000" />
       <workItem from="1764845519372" duration="1944000" />
       <workItem from="1765479817080" duration="426000" />
+      <workItem from="1767025582359" duration="27000" />
+      <workItem from="1767027141098" duration="845000" />
     </task>
     <servers />
   </component>

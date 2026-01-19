@@ -21,31 +21,21 @@ public class UserController {
 
     private final UserService userService;
 
-    /*@GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')") // ADMIN ALONE HAVE ACCESS TO THIS endpoint
-    public ResponseEntity<Response<List<UserDTO>>> getAllUsers(){
-        return ResponseEntity.ok(userService.getAllUsers());
-    }*/
-
-    /*@PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Response<?>> updateOwnAccount(
-            @ModelAttribute UserDTO userDTO,
-            @RequestPart(value = "imageFile", required = false)MultipartFile imageFile
-            ){
-        userDTO.setImageFile(imageFile);
+    @PutMapping(value = "/update")
+    public ResponseEntity<Response<?>> updateOwnAccount(@Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateOwnAccount(userDTO));
     }
-*/
+
     @GetMapping("/account")
     public ResponseEntity<Response<UserDTO>> getOwnAccountDetails() {
         return ResponseEntity.ok(userService.getOwnAccountDetails());
     }
 
-/*
+
     @DeleteMapping("/deactivate")
     public ResponseEntity<Response<?>> deactivateOwnAccount() {
         return ResponseEntity.ok(userService.deactivateOwnAccount());
-    }*/
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<UserDTO>> getUserProfileById(@PathVariable Long id) {

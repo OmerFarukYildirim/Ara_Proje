@@ -33,6 +33,9 @@ function About() {
                 sizlere sunuyoruz. Her bir haberimiz, tıpkı lokumun her bir parçası gibi, 
                 özenle seçilmiş ve işlenmiş içeriklerden oluşur.
               </p>
+              <p className="text-lg leading-relaxed font-semibold mt-4">
+                Aynı zamanda yabancı dilinizi geliştirmeye yardımcı oluyoruz.
+              </p>
               <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-8">Misyonumuz</h2>
               <p className="text-lg leading-relaxed">
                 Lokum Haber olarak, tarafsız, objektif ve doğru habercilik ilkelerinden 

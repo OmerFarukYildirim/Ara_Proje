@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed">
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/auth_users/services/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/aws/AWSS3ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/aws/AWSS3ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/aws/AwsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/java/com/AuthMikroService/aws/AwsConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/controller/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/controller/AuthController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/dtos/RegistrationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/dtos/RegistrationRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/AuthServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/AuthServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../AuthMikroService/target/classes/com/AuthMikroService/auth_users/services/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/FetcherMicroService/services/NewsService.java" afterDir="false" />
-    </list>
+    <list default="true" id="f1ba1318-66e9-45c0-9a1e-45dc7c7aa953" name="Changes" comment="nothing changed" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,6 +117,8 @@
       <workItem from="1766846903232" duration="5382000" />
       <workItem from="1766879938376" duration="112000" />
       <workItem from="1766911557766" duration="791000" />
+      <workItem from="1766908647450" duration="656000" />
+      <workItem from="1767025989392" duration="28000" />
     </task>
     <task id="LOCAL-00001" summary="nothing changed">
       <created>1761094812618</created>

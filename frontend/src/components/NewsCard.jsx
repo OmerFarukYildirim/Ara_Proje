@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Share2,
-  X,
   Laptop,
   Trophy,
   Microscope,
@@ -126,9 +124,8 @@ const getCategoryGradient = (category) => {
   }
 };
 
-function NewsCard({ news, isActive, onNext, onPrevious, onShare, onCardClick }) {
+function NewsCard({ news, index, isActive, onNext, onPrevious, onCardClick }) {
   const navigate = useNavigate();
-  const [isNotInterested, setIsNotInterested] = useState(false);
   const [imageError, setImageError] = useState(false);
   const cardViewStartTime = useRef(null);
   const cardViewDuration = useRef(0);
@@ -183,37 +180,11 @@ function NewsCard({ news, isActive, onNext, onPrevious, onShare, onCardClick }) 
         newsId: news.id,
         category: news.category,
         newsData: news, // Tüm haber verisi
+        cardIndex: index, // Kartın index'i
       },
     });
   };
 
-  const handleNotInterested = (e) => {
-    e.stopPropagation();
-    setIsNotInterested(true);
-    // İlgilenmiyorum işlemi - haber atlanabilir veya API'ye bildirilebilir
-    // Şimdilik sadece state güncelleniyor
-  };
-
-  const handleShare = (e) => {
-    e.stopPropagation();
-    
-    // Share durumunu kaydet
-    if (onShare) {
-      onShare();
-    }
-    
-    const shareUrl = `${window.location.origin}/news/${news.id}`;
-    if (navigator.share) {
-      navigator.share({
-        title: news.title,
-        text: news.summary || news.content,
-        url: shareUrl,
-      });
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert("Link kopyalandı!");
-    }
-  };
 
   const handleImageError = (e) => {
     // Görsel yüklenemezse default görseli kullan
@@ -263,10 +234,16 @@ function NewsCard({ news, isActive, onNext, onPrevious, onShare, onCardClick }) 
         {/* Üst başlık bölümü */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xs">
-                {news.author.charAt(0).toUpperCase()}
-              </span>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-white">
+              <img 
+                src="/logo.png" 
+                alt="Lokum Haber" 
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<span class="text-gray-600 font-bold text-xs">LH</span>';
+                }}
+              />
             </div>
             <div>
               <p className="text-gray-900 font-semibold text-sm">{news.author}</p>
@@ -277,16 +254,6 @@ function NewsCard({ news, isActive, onNext, onPrevious, onShare, onCardClick }) 
             <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
               {news.category}
             </span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleNotInterested(e);
-              }}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-              title="İlgilenmiyorum"
-            >
-              <X className="w-5 h-5 text-gray-600" />
-            </button>
           </div>
         </div>
 
@@ -307,20 +274,8 @@ function NewsCard({ news, isActive, onNext, onPrevious, onShare, onCardClick }) 
           </div>
         </div>
 
-        {/* Etkileşim butonları */}
-        <div className="px-4 py-2 flex items-center justify-between border-b border-gray-200">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleShare(e);
-              }}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-              title="Paylaş"
-            >
-              <Share2 className="w-5 h-5 text-gray-700" />
-            </button>
-          </div>
+        {/* Okuma süresi */}
+        <div className="px-4 py-2 flex items-center justify-end border-b border-gray-200">
           <span className="text-gray-500 text-xs">{news.readTime}</span>
         </div>
 

@@ -94,7 +94,7 @@ spec:
         - name: Kafka__ProducerTopic
           value: "haber_isleme_topic"
         - name: HuggingFace__ApiKey
-          value: "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"
+          value: "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"
         - name: HuggingFace__ApiUrl
           value: "https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn"
         # RESOURCE OPTIMIZASYONU
@@ -147,7 +147,7 @@ spec:
         - name: ELASTICSEARCH_URL
           value: "http://elasticsearch:9200"
         - name: hf_api_key
-          value: "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"
+          value: "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"
         # RESOURCE OPTIMIZASYONU
         resources:
           requests:

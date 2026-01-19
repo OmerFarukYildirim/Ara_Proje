@@ -56,7 +56,7 @@ kafka_consumer: Optional[AIOKafkaConsumer] = None # YENİ: Cevap dinleyici
 KAFKA_TOPIC_MIXED_REPLY = "mixed-feed-reply-topic"
 KAFKA_TOPIC_UNMIXED_FEED = "unmixed-feed-topic"
 pending_requests: Dict[str, asyncio.Future] = {}   # Cevap bekleyenler
-NEWSDATA_API_KEY = "pub_01dca7322fcf46e583aa9fa5498abb97"
+NEWSDATA_API_KEY = "pub_b5a43cbfda414895b80e91fb1f51f017"
 
 scheduler = AsyncIOScheduler()
 
@@ -255,13 +255,13 @@ async def startup_event():
         print("[content-finder] ⛔ KRİTİK: Kafka Producer başlatılamadı! Haber taraması yapılamayacak.", flush=True)
 
     # 3. Scheduler'ı Başlat
-    #try:
+    try:
         # CronTrigger: Her saatin 0. dakikasında (Tam saatlerde)
-        #scheduler.add_job(scheduled_news_job, CronTrigger(minute='0'))
-        #scheduler.start()
-        #print("[content-finder] ⏰ Otomatik Haber Scheduler Başlatıldı (Cron: minute='0').", flush=True)
-    #except Exception as e:
-        #print(f"[content-finder] Scheduler Hatası: {e}", flush=True)
+        scheduler.add_job(scheduled_news_job, CronTrigger(minute='0'))
+        scheduler.start()
+        print("[content-finder] ⏰ Otomatik Haber Scheduler Başlatıldı (Cron: minute='0').", flush=True)
+    except Exception as e:
+        print(f"[content-finder] Scheduler Hatası: {e}", flush=True)
 
     # 4. Recommender Client
     try:
