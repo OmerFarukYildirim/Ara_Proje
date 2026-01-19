@@ -27,8 +27,8 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: omerfarukyildirim/frontend-service:v1
-        imagePullPolicy: IfNotPresent
+        image: omerfarukyildirim/frontend-image:v1
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         # EKLENEN KISIM: Resource Limits
