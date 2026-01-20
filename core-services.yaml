@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: content-finder-service
-        image: omerfarukyildirim/content-finder-image:v9
+        image: omerfarukyildirim/content-finder-image:v12
         imagePullPolicy: Always
         env:
         - name: DATABASE_URL
@@ -44,7 +44,7 @@ spec:
         - name: KAFKA_TOPIC_MIXED_REPLY
           value: "mixed-feed-reply-topic"
         - name: NEWSDATA_API_KEY
-          value: "pub_79046520157e4f0db4596df6a17e9775"
+          value: "pub_01dca7322fcf46e583aa9fa5498abb97"
         - name: RECOMMENDER_SERVICE_URL
           value: "http://recommender-service:8004"
         - name: TRUSTED_API_KEY

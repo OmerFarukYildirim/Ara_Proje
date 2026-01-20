@@ -7,8 +7,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.util.retry.Retry;
 import java.time.Duration;
 import java.util.List;
 
@@ -135,13 +133,7 @@ public class NewsService {
                                     .build())
                             .bodyValue(llmRequest)
                             .retrieve()
-                            .bodyToMono(GeminiResponse.class)
-                            .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(40)) 
-                                    .filter(throwable -> throwable instanceof WebClientResponseException.TooManyRequests)
-                                    .doBeforeRetry(signal -> {
-                                        System.out.println(">>> [KOTA DOLDU - 429] Gemini biraz meşgul. " + targetUrl + " için 40 saniye bekleniyor... (Deneme: " + (signal.totalRetries() + 1) + "/3)");
-                                    })
-                            );
+                            .bodyToMono(GeminiResponse.class);
                 })
                 .flatMap(geminiResponse -> {
                     // Adım 4: Yanıtı Parse Et ve Kafka'ya Bas

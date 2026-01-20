@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: fetcher-service
-        image: omerfarukyildirim/fetcher-image:v9
+        image: omerfarukyildirim/fetcher-image:v16
         imagePullPolicy: Always
         env:
         - name: SERVER_PORT
@@ -40,7 +40,7 @@ spec:
         - name: KAFKA_TOPIC_NEWS_PROCESSED
           value: "haber_zenginlestirme_topic"
         - name: LLM_API_KEY
-          value: "AIzaSyArouNWNyfPY6019hxIr14yf71I68I78x8"
+          value: "AIzaSyAXBKULrDW9rTVr68n4NfLU8HjVJNmGYt0"
         - name: LLM_API_BASEURL
           value: "https://generativelanguage.googleapis.com"
         # JAVA BELLEK AYARI
